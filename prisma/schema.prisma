@@ -1,0 +1,70 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model AdminUser {
+  id           String   @id @default(cuid())
+  username     String   @unique
+  passwordHash String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+enum QuestionType {
+  RATING_STARS
+  MULTIPLE_CHOICE
+  TEXT
+  YES_NO
+  NPS
+}
+
+model Survey {
+  id          String     @id @default(cuid())
+  slug        String     @unique
+  title       String
+  description String?
+  isActive    Boolean    @default(true)
+  order       Int        @default(0)
+  questions   Question[]
+  responses   Response[]
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+}
+
+model Question {
+  id        String       @id @default(cuid())
+  surveyId  String
+  survey    Survey       @relation(fields: [surveyId], references: [id], onDelete: Cascade)
+  type      QuestionType
+  text      String
+  required  Boolean      @default(true)
+  order     Int          @default(0)
+  options   Json?
+  answers   Answer[]
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+}
+
+model Response {
+  id              String   @id @default(cuid())
+  surveyId        String
+  survey          Survey   @relation(fields: [surveyId], references: [id], onDelete: Cascade)
+  respondentName  String?
+  respondentPhone String?
+  answers         Answer[]
+  createdAt       DateTime @default(now())
+}
+
+model Answer {
+  id         String   @id @default(cuid())
+  responseId String
+  response   Response @relation(fields: [responseId], references: [id], onDelete: Cascade)
+  questionId String
+  question   Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  value      Json
+}

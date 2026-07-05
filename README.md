@@ -1,36 +1,33 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Encuestas SHOGUN
 
-## Getting Started
+Sitio de encuestas de satisfacción para SHOGUN (Fotografía, Edición, Servicio al Cliente).
 
-First, run the development server:
+## Desarrollo local
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+1. `npm install`
+2. Copia `.env.example` a `.env` y ajusta los valores.
+3. Necesitas una base de datos PostgreSQL accesible (local o remota) en `DATABASE_URL`.
+4. `npx prisma migrate dev`
+5. `npx prisma db seed`
+6. `npm run dev`
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Despliegue en Railway
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+1. Crea un nuevo proyecto en Railway y conéctalo a este repositorio (New Project → Deploy from GitHub repo).
+2. Agrega el plugin de PostgreSQL: New → Database → PostgreSQL. Railway crea automáticamente la variable `DATABASE_URL` y la comparte con el servicio web si están en el mismo proyecto (referencia la variable en el servicio web como `${{Postgres.DATABASE_URL}}` si no se auto-vincula).
+3. En el servicio web, configura las variables de entorno:
+   - `ADMIN_USERNAME` — usuario inicial del admin
+   - `ADMIN_PASSWORD` — contraseña inicial del admin (cámbiala después desde `/admin/configuracion`)
+   - `SESSION_SECRET` — cadena aleatoria larga (por ejemplo, generada con `openssl rand -base64 32`)
+   - `NEXT_PUBLIC_BASE_URL` — la URL pública que Railway asigna al servicio (ej. `https://encuestas-shogun.up.railway.app`)
+4. Railway detecta Next.js automáticamente y usa `npm run build` / `npm run start`. El comando `start` corre `prisma migrate deploy` antes de levantar el servidor, así que las migraciones se aplican en cada deploy.
+5. Después del primer deploy, corre el seed una vez desde la consola de Railway (Shell del servicio): `npx prisma db seed`. Esto crea el admin inicial y las 3 encuestas base.
+6. Verifica: abre la URL pública, confirma que aparecen las 3 encuestas, y entra a `/admin/login` con las credenciales configuradas.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Estructura del proyecto
 
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- `src/app/` — páginas públicas (`/`, `/encuesta/[slug]`) y panel admin (`/admin/**`)
+- `src/lib/` — lógica de negocio sin dependencias de React (auth, validación, KPIs, CSV, QR)
+- `src/components/` — componentes de UI para el formulario público y el panel admin
+- `prisma/` — esquema, migraciones y seed
+- `tests/unit/` — pruebas de los módulos en `src/lib/`

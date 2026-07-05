@@ -1,0 +1,87 @@
+import { notFound } from "next/navigation";
+import { db } from "@/lib/db";
+import { computeKpis } from "@/lib/surveys/kpis";
+import { KpiCards } from "@/components/admin/KpiCards";
+import { ResultsChart } from "@/components/admin/ResultsChart";
+import { ResultsTable } from "@/components/admin/ResultsTable";
+
+export default async function ResultsPage({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ id: string }>;
+  searchParams: Promise<{ from?: string; to?: string }>;
+}) {
+  const { id } = await params;
+  const { from, to } = await searchParams;
+
+  const survey = await db.survey.findUnique({
+    where: { id },
+    include: { questions: { orderBy: { order: "asc" } } },
+  });
+  if (!survey) notFound();
+
+  const responses = await db.response.findMany({
+    where: {
+      surveyId: id,
+      createdAt: {
+        gte: from ? new Date(from) : undefined,
+        lte: to ? new Date(`${to}T23:59:59`) : undefined,
+      },
+    },
+    include: { answers: true },
+    orderBy: { createdAt: "desc" },
+  });
+
+  const allAnswers = responses.flatMap((r) => r.answers.map((a) => ({ questionId: a.questionId, value: a.value })));
+  const kpis = computeKpis(
+    survey.questions.map((q) => ({ id: q.id, type: q.type, text: q.text })),
+    allAnswers
+  );
+
+  const questionTextById = new Map(survey.questions.map((q) => [q.id, q.text]));
+  const tableRows = responses.map((r) => ({
+    id: r.id,
+    createdAt: r.createdAt,
+    respondentName: r.respondentName,
+    answers: r.answers.map((a) => ({
+      questionText: questionTextById.get(a.questionId) ?? "?",
+      value: a.value,
+    })),
+  }));
+
+  return (
+    <div>
+      <div className="mb-6 flex items-center justify-between">
+        <h1 className="text-2xl font-extrabold text-shogun-black">Resultados: {survey.title}</h1>
+        <a
+          href={`/admin/encuestas/${survey.id}/resultados/export`}
+          className="rounded-lg bg-shogun-black px-4 py-2 text-sm font-bold text-white"
+        >
+          ⬇ Exportar CSV
+        </a>
+      </div>
+
+      <form className="mb-6 flex items-end gap-3 rounded-xl border border-gray-200 bg-white p-4">
+        <div>
+          <label className="mb-1 block text-xs text-gray-500">Desde</label>
+          <input type="date" name="from" defaultValue={from} className="rounded border px-2 py-1 text-sm" />
+        </div>
+        <div>
+          <label className="mb-1 block text-xs text-gray-500">Hasta</label>
+          <input type="date" name="to" defaultValue={to} className="rounded border px-2 py-1 text-sm" />
+        </div>
+        <button className="rounded bg-shogun-red px-3 py-1.5 text-sm font-bold text-white">Filtrar</button>
+      </form>
+
+      <KpiCards
+        averageRating={kpis.averageRating}
+        nps={kpis.nps}
+        yesPercentage={kpis.yesPercentage}
+        totalResponses={responses.length}
+      />
+      <ResultsChart distribution={kpis.ratingDistribution} />
+      <ResultsTable rows={tableRows} />
+    </div>
+  );
+}

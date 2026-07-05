@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import type { Question, Survey } from "@prisma/client";
 import { QuestionField } from "./QuestionField";
 import { ThankYou } from "./ThankYou";
@@ -19,6 +20,7 @@ export function SurveyForm({
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const router = useRouter();
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -35,16 +37,12 @@ export function SurveyForm({
     setSubmitted(true);
   }
 
-  function resetForm() {
-    setAnswers({});
-    setRespondentName("");
-    setRespondentPhone("");
-    setErrors({});
-    setSubmitted(false);
+  function goToSelector() {
+    router.push("/");
   }
 
   if (submitted) {
-    return <ThankYou onReset={resetForm} />;
+    return <ThankYou onReset={goToSelector} />;
   }
 
   return (

@@ -1,6 +1,8 @@
 import { notFound } from "next/navigation";
 import { db } from "@/lib/db";
 import { QuestionEditor } from "@/components/admin/QuestionEditor";
+import { generateQrDataUrl } from "@/lib/qr";
+import { ShareLink } from "@/components/admin/ShareLink";
 import { toggleSurveyActiveAction } from "./actions";
 
 export default async function SurveyEditorPage({
@@ -15,6 +17,10 @@ export default async function SurveyEditorPage({
   });
 
   if (!survey) notFound();
+
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL ?? "http://localhost:3000";
+  const publicUrl = `${baseUrl}/encuesta/${survey.slug}`;
+  const qrDataUrl = await generateQrDataUrl(publicUrl);
 
   return (
     <div className="max-w-2xl">
@@ -38,6 +44,8 @@ export default async function SurveyEditorPage({
           </button>
         </form>
       </div>
+
+      <ShareLink url={publicUrl} qrDataUrl={qrDataUrl} />
 
       <a
         href={`/admin/encuestas/${survey.id}/resultados`}

@@ -5,10 +5,12 @@
 
 ## 1. Contexto y propósito
 
-El sitio de encuestas David Fotocolor ya está desplegado en Railway. Se necesitan dos mejoras al editor de encuestas:
+El sitio de encuestas David Fotocolor ya está desplegado en Railway. Se necesitan cuatro mejoras al editor de encuestas:
 
 1. **Emoji por encuesta**: mostrar un emoji junto al título de cada encuesta (ej. 📷 para Fotografía) en el selector público y en el panel admin.
 2. **Imágenes en preguntas**: permitir adjuntar una imagen general a cualquier pregunta, y además permitir que cada opción de una pregunta de opción múltiple tenga su propia foto — el caso principal es "¿Quién te atendió?" mostrando la foto de cada empleado como opción.
+3. **Editar información de la encuesta**: hoy no hay forma de cambiar el título/descripción de una encuesta ya creada.
+4. **Resetear encuesta**: un botón para, después de hacer pruebas, borrar todas las respuestas y devolver título/descripción/emoji/preguntas a como estaban al crear la encuesta.
 
 ## 2. Emoji por encuesta
 
@@ -86,9 +88,35 @@ Cualquier `<img src="/api/images/{id}">` —tanto en el editor admin como en el 
 
 Las 3 encuestas sembradas tienen una pregunta `MULTIPLE_CHOICE` ("¿Qué tipo de sesión tomaste?" en Fotografía) con `options` como `string[]`. Al desplegar el cambio de esquema, se necesita un script de migración de datos (no solo de esquema) que convierta cualquier `options` existente de `string[]` a `{label: string}[]` antes de que el código nuevo intente leerlo con la forma nueva.
 
-## 4. Fuera de alcance
+## 4. Editar información de la encuesta
+
+- En `/admin/encuestas/[id]`, un botón "Editar" junto al título abre un formulario inline con: título, descripción, emoji.
+- El **slug queda fijo** (no editable desde este formulario) — la URL pública `/encuesta/{slug}` nunca cambia después de creada, para no romper QRs o links ya compartidos.
+- Guardar actualiza únicamente `Survey.title`, `description`, `emoji`. No toca `slug`, `questions` ni `responses`.
+
+## 5. Resetear encuesta (fábrica + borrar respuestas)
+
+### Snapshot de fábrica
+
+- `Survey` gana un campo `factorySnapshot` (`Json`) que captura, en el momento de creación de la encuesta, `{ title, description, emoji, questions: [{ type, text, required, order, options }] }`.
+- Se guarda automáticamente:
+  - Al crear una encuesta desde `/admin/encuestas/nueva` (con las preguntas vacías en ese momento — normalmente ninguna aún).
+  - Al correr `prisma/seed.ts` para las 3 encuestas iniciales (con sus preguntas ya definidas).
+- **Migración para las 3 encuestas ya desplegadas**: como fueron creadas antes de este cambio y no tienen snapshot, un script de migración de datos les genera uno usando su estado **actual** en la base de datos (título/descripción/preguntas tal como están ahora, incluyendo cualquier edición manual que ya se les haya hecho) — no el contenido original de `seed.ts`.
+
+### Botón "Resetear encuesta"
+
+- Visible en `/admin/encuestas/[id]`, con confirmación explícita (el usuario debe confirmar en un diálogo que describe que se borrarán todas las respuestas y las preguntas actuales).
+- Al confirmar:
+  1. Borra todas las `Response` de la encuesta (y sus `Answer` por cascada).
+  2. Restaura `title`, `description`, `emoji` desde `factorySnapshot`.
+  3. Borra las `Question` actuales y crea unas nuevas idénticas a las del snapshot (nuevos ids — no hay problema porque las respuestas ya se borraron en el paso 1, no quedan `Answer` apuntando a las preguntas viejas).
+  4. El `slug` nunca cambia.
+
+## 6. Fuera de alcance
 
 - Recorte/edición de imágenes (crop, resize) — se suben tal cual, el navegador las escala visualmente.
 - Limpieza automática de imágenes huérfanas al reemplazar/eliminar preguntas u opciones.
 - Selector de emoji con picker visual (queda como campo de texto libre).
 - Múltiples imágenes por pregunta (solo una imagen general + una por opción).
+- Actualizar el `factorySnapshot` después de la creación (ediciones posteriores a preguntas/título no se reflejan en el snapshot; "fábrica" siempre es el estado al momento de crear la encuesta, no el último guardado).

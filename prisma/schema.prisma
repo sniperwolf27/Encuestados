@@ -15,6 +15,13 @@ model AdminUser {
   updatedAt    DateTime @updatedAt
 }
 
+model Image {
+  id        String   @id @default(cuid())
+  data      Bytes
+  mimeType  String
+  createdAt DateTime @default(now())
+}
+
 enum QuestionType {
   RATING_STARS
   MULTIPLE_CHOICE
@@ -24,16 +31,18 @@ enum QuestionType {
 }
 
 model Survey {
-  id          String     @id @default(cuid())
-  slug        String     @unique
-  title       String
-  description String?
-  isActive    Boolean    @default(true)
-  order       Int        @default(0)
-  questions   Question[]
-  responses   Response[]
-  createdAt   DateTime   @default(now())
-  updatedAt   DateTime   @updatedAt
+  id              String     @id @default(cuid())
+  slug            String     @unique
+  title           String
+  description     String?
+  emoji           String?
+  isActive        Boolean    @default(true)
+  order           Int        @default(0)
+  factorySnapshot Json?
+  questions       Question[]
+  responses       Response[]
+  createdAt       DateTime   @default(now())
+  updatedAt       DateTime   @updatedAt
 }
 
 model Question {
@@ -45,6 +54,7 @@ model Question {
   required  Boolean      @default(true)
   order     Int          @default(0)
   options   Json?
+  imageId   String?
   answers   Answer[]
   createdAt DateTime     @default(now())
   updatedAt DateTime     @updatedAt

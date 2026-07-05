@@ -21,7 +21,7 @@ export function KpiCards({
       {cards.map((card) => (
         <div key={card.label} className="rounded-xl border border-gray-200 bg-white p-4">
           <p className="text-xs text-gray-500">{card.label}</p>
-          <p className="text-2xl font-extrabold text-shogun-red">{card.value}</p>
+          <p className="text-2xl font-extrabold text-brand-orange">{card.value}</p>
         </div>
       ))}
     </div>

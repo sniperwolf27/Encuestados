@@ -15,9 +15,9 @@ export function QuestionField({
 }) {
   return (
     <div className="mb-6">
-      <p className="mb-2 font-semibold text-shogun-black">
+      <p className="mb-2 font-semibold text-brand-navy">
         {question.text}
-        {question.required && <span className="text-shogun-red"> *</span>}
+        {question.required && <span className="text-brand-orange"> *</span>}
       </p>
 
       {question.type === "RATING_STARS" && (
@@ -44,7 +44,7 @@ export function QuestionField({
             type="button"
             onClick={() => onChange(true)}
             className={`rounded-lg border-2 px-6 py-3 font-bold ${
-              value === true ? "border-shogun-red text-shogun-red" : "border-gray-200 text-gray-400"
+              value === true ? "border-brand-orange text-brand-orange" : "border-gray-200 text-gray-400"
             }`}
           >
             Sí
@@ -53,7 +53,7 @@ export function QuestionField({
             type="button"
             onClick={() => onChange(false)}
             className={`rounded-lg border-2 px-6 py-3 font-bold ${
-              value === false ? "border-shogun-red text-shogun-red" : "border-gray-200 text-gray-400"
+              value === false ? "border-brand-orange text-brand-orange" : "border-gray-200 text-gray-400"
             }`}
           >
             No
@@ -69,7 +69,7 @@ export function QuestionField({
               key={n}
               onClick={() => onChange(n)}
               className={`h-10 w-10 rounded-lg border-2 font-bold ${
-                value === n ? "border-shogun-red bg-shogun-red text-white" : "border-gray-200 text-gray-500"
+                value === n ? "border-brand-orange bg-brand-orange text-white" : "border-gray-200 text-gray-500"
               }`}
             >
               {n}
@@ -86,7 +86,7 @@ export function QuestionField({
               key={option}
               onClick={() => onChange(option)}
               className={`rounded-lg border-2 px-4 py-2 font-semibold ${
-                value === option ? "border-shogun-red text-shogun-red" : "border-gray-200 text-gray-500"
+                value === option ? "border-brand-orange text-brand-orange" : "border-gray-200 text-gray-500"
               }`}
             >
               {option}
@@ -104,7 +104,7 @@ export function QuestionField({
         />
       )}
 
-      {error && <p className="mt-1 text-sm text-shogun-red">{error}</p>}
+      {error && <p className="mt-1 text-sm text-brand-orange">{error}</p>}
     </div>
   );
 }

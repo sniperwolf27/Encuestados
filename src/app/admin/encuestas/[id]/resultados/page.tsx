@@ -53,10 +53,10 @@ export default async function ResultsPage({
   return (
     <div>
       <div className="mb-6 flex items-center justify-between">
-        <h1 className="text-2xl font-extrabold text-shogun-black">Resultados: {survey.title}</h1>
+        <h1 className="text-2xl font-extrabold text-brand-navy">Resultados: {survey.title}</h1>
         <a
           href={`/admin/encuestas/${survey.id}/resultados/export`}
-          className="rounded-lg bg-shogun-black px-4 py-2 text-sm font-bold text-white"
+          className="rounded-lg bg-brand-navy px-4 py-2 text-sm font-bold text-white"
         >
           ⬇ Exportar CSV
         </a>
@@ -71,7 +71,7 @@ export default async function ResultsPage({
           <label className="mb-1 block text-xs text-gray-500">Hasta</label>
           <input type="date" name="to" defaultValue={to} className="rounded border px-2 py-1 text-sm" />
         </div>
-        <button className="rounded bg-shogun-red px-3 py-1.5 text-sm font-bold text-white">Filtrar</button>
+        <button className="rounded bg-brand-orange px-3 py-1.5 text-sm font-bold text-white">Filtrar</button>
       </form>
 
       <KpiCards

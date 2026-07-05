@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Image from "next/image";
 
 const RESET_SECONDS = 6;
 
@@ -17,10 +18,8 @@ export function ThankYou({ onReset }: { onReset: () => void }) {
   }, [secondsLeft, onReset]);
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-shogun-black px-4 text-center">
-      <div className="mb-6 flex h-20 w-20 items-center justify-center rounded-2xl bg-shogun-red text-4xl font-black text-white">
-        S
-      </div>
+    <div className="flex min-h-screen flex-col items-center justify-center bg-brand-navy px-4 text-center">
+      <Image src="/logo.jpg" alt="David Fotocolor" width={180} height={112} className="mb-6 rounded-lg" />
       <h1 className="mb-2 text-2xl font-extrabold text-white">¡Gracias por tu respuesta!</h1>
       <p className="text-white/60">Volviendo al inicio en {secondsLeft}s...</p>
     </div>

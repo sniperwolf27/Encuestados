@@ -10,7 +10,7 @@ export function ResultsChart({ distribution }: { distribution: Record<1 | 2 | 3 
 
   return (
     <div className="mb-6 rounded-xl border border-gray-200 bg-white p-4">
-      <p className="mb-3 text-sm font-semibold text-shogun-black">Distribución de calificaciones</p>
+      <p className="mb-3 text-sm font-semibold text-brand-navy">Distribución de calificaciones</p>
       <ResponsiveContainer width="100%" height={200}>
         <BarChart data={data}>
           <XAxis dataKey="stars" fontSize={12} />

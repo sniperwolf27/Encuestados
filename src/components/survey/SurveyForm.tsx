@@ -47,7 +47,7 @@ export function SurveyForm({
 
   return (
     <main className="mx-auto min-h-screen max-w-lg bg-white px-4 py-10">
-      <h1 className="mb-1 text-2xl font-extrabold text-shogun-black">{survey.title}</h1>
+      <h1 className="mb-1 text-2xl font-extrabold text-brand-navy">{survey.title}</h1>
       {survey.description && <p className="mb-6 text-gray-500">{survey.description}</p>}
 
       <form onSubmit={handleSubmit}>
@@ -62,7 +62,7 @@ export function SurveyForm({
         ))}
 
         <div className="mb-6">
-          <p className="mb-2 font-semibold text-shogun-black">Nombre (opcional)</p>
+          <p className="mb-2 font-semibold text-brand-navy">Nombre (opcional)</p>
           <input
             value={respondentName}
             onChange={(e) => setRespondentName(e.target.value)}
@@ -70,7 +70,7 @@ export function SurveyForm({
           />
         </div>
         <div className="mb-6">
-          <p className="mb-2 font-semibold text-shogun-black">Teléfono (opcional)</p>
+          <p className="mb-2 font-semibold text-brand-navy">Teléfono (opcional)</p>
           <input
             value={respondentPhone}
             onChange={(e) => setRespondentPhone(e.target.value)}
@@ -78,12 +78,12 @@ export function SurveyForm({
           />
         </div>
 
-        {errors._form && <p className="mb-4 text-sm text-shogun-red">{errors._form}</p>}
+        {errors._form && <p className="mb-4 text-sm text-brand-orange">{errors._form}</p>}
 
         <button
           type="submit"
           disabled={submitting}
-          className="w-full rounded-lg bg-shogun-red py-3 text-lg font-bold text-white disabled:opacity-60"
+          className="w-full rounded-lg bg-brand-orange py-3 text-lg font-bold text-white disabled:opacity-60"
         >
           {submitting ? "Enviando..." : "Enviar"}
         </button>

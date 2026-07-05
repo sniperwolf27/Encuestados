@@ -26,7 +26,7 @@ export default async function SurveyEditorPage({
     <div className="max-w-2xl">
       <div className="mb-6 flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-extrabold text-shogun-black">{survey.title}</h1>
+          <h1 className="text-2xl font-extrabold text-brand-navy">{survey.title}</h1>
           <p className="text-sm text-gray-500">/encuesta/{survey.slug}</p>
         </div>
         <form
@@ -49,7 +49,7 @@ export default async function SurveyEditorPage({
 
       <a
         href={`/admin/encuestas/${survey.id}/resultados`}
-        className="mb-6 inline-block text-sm font-semibold text-shogun-red"
+        className="mb-6 inline-block text-sm font-semibold text-brand-orange"
       >
         Ver resultados →
       </a>

@@ -65,7 +65,7 @@ export function QuestionEditor({
 
       <form action={addQuestionAction} className="space-y-2 rounded-lg border border-dashed border-gray-300 p-4">
         <input type="hidden" name="surveyId" value={surveyId} />
-        <p className="text-sm font-semibold text-shogun-black">Agregar pregunta</p>
+        <p className="text-sm font-semibold text-brand-navy">Agregar pregunta</p>
         <select name="type" className="rounded border px-2 py-1 text-sm">
           {Object.entries(QUESTION_TYPE_LABELS).map(([value, label]) => (
             <option key={value} value={value}>
@@ -83,7 +83,7 @@ export function QuestionEditor({
           <input type="checkbox" name="required" defaultChecked />
           Obligatoria
         </label>
-        <button className="rounded bg-shogun-black px-3 py-1 text-sm font-bold text-white">
+        <button className="rounded bg-brand-navy px-3 py-1 text-sm font-bold text-white">
           Agregar
         </button>
       </form>
@@ -153,7 +153,7 @@ function SortableQuestionRow({
             Obligatoria
           </label>
           <div className="flex gap-2">
-            <button className="rounded bg-shogun-red px-3 py-1 text-sm font-bold text-white">
+            <button className="rounded bg-brand-orange px-3 py-1 text-sm font-bold text-white">
               Guardar
             </button>
             <button type="button" onClick={onCancelEdit} className="rounded border px-3 py-1 text-sm">
@@ -173,18 +173,18 @@ function SortableQuestionRow({
               ⠿
             </span>
             <div>
-              <p className="font-semibold text-shogun-black">{question.text}</p>
+              <p className="font-semibold text-brand-navy">{question.text}</p>
               <p className="text-xs text-gray-500">
                 {QUESTION_TYPE_LABELS[question.type]} · {question.required ? "Obligatoria" : "Opcional"}
               </p>
             </div>
           </div>
           <div className="flex gap-2 text-sm">
-            <button onClick={onEdit} className="text-shogun-red">
+            <button onClick={onEdit} className="text-brand-orange">
               Editar
             </button>
             <form action={deleteQuestionAction.bind(null, question.id, surveyId)}>
-              <button className="text-gray-400 hover:text-shogun-red">Eliminar</button>
+              <button className="text-gray-400 hover:text-brand-orange">Eliminar</button>
             </form>
           </div>
         </div>

@@ -10,10 +10,10 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-  --color-shogun-red: #e03a21;
-  --color-shogun-black: #111111;
+  --color-brand-orange: #f26522;
+  --color-brand-navy: #1b3a6b;
 }
 
 body {
-  @apply bg-white text-shogun-black antialiased;
+  @apply bg-white text-brand-navy antialiased;
 }

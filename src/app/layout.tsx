@@ -13,8 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Encuestas SHOGUN",
-  description: "Encuestas de satisfacción SHOGUN",
+  title: "Encuestas David Fotocolor",
+  description: "Encuestas de satisfacción David Fotocolor",
 };
 
 export default function RootLayout({

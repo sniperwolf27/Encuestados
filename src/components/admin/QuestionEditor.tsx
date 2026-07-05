@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { Question, QuestionType } from "@prisma/client";
 import {
   DndContext,
@@ -34,6 +34,10 @@ export function QuestionEditor({
   const [questions, setQuestions] = useState(initialQuestions);
   const [editingId, setEditingId] = useState<string | null>(null);
   const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 5 } }));
+
+  useEffect(() => {
+    setQuestions(initialQuestions);
+  }, [initialQuestions]);
 
   async function handleDragEnd(event: DragEndEvent) {
     const { active, over } = event;

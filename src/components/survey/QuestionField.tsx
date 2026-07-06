@@ -1,6 +1,7 @@
 "use client";
 
 import type { Question } from "@prisma/client";
+import type { SurveyOption as Option } from "@/lib/surveys/options";
 
 export function QuestionField({
   question,
@@ -13,8 +14,19 @@ export function QuestionField({
   error?: string;
   onChange: (value: unknown) => void;
 }) {
+  const options: Option[] = Array.isArray(question.options) ? (question.options as Option[]) : [];
+  const hasOptionImages = options.some((o) => o.imageId);
+
   return (
     <div className="mb-6">
+      {question.imageId && (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
+          src={`/api/images/${question.imageId}`}
+          alt=""
+          className="mb-3 max-h-48 w-full rounded-lg object-cover"
+        />
+      )}
       <p className="mb-2 font-semibold text-brand-navy">
         {question.text}
         {question.required && <span className="text-brand-orange"> *</span>}
@@ -78,18 +90,47 @@ export function QuestionField({
         </div>
       )}
 
-      {question.type === "MULTIPLE_CHOICE" && (
-        <div className="flex flex-wrap gap-2">
-          {(Array.isArray(question.options) ? (question.options as string[]) : []).map((option) => (
+      {question.type === "MULTIPLE_CHOICE" && hasOptionImages && (
+        <div className="flex flex-wrap gap-3">
+          {options.map((option) => (
             <button
               type="button"
-              key={option}
-              onClick={() => onChange(option)}
-              className={`rounded-lg border-2 px-4 py-2 font-semibold ${
-                value === option ? "border-brand-orange text-brand-orange" : "border-gray-200 text-gray-500"
+              key={option.label}
+              onClick={() => onChange(option.label)}
+              className={`w-24 rounded-lg border-2 p-2 text-center ${
+                value === option.label ? "border-brand-orange" : "border-gray-200"
               }`}
             >
-              {option}
+              {option.imageId ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  src={`/api/images/${option.imageId}`}
+                  alt={option.label}
+                  className="mb-1 h-20 w-20 rounded-full object-cover"
+                />
+              ) : (
+                <div className="mb-1 flex h-20 w-20 items-center justify-center rounded-full bg-gray-100 text-2xl">
+                  👤
+                </div>
+              )}
+              <span className="text-xs font-semibold text-brand-navy">{option.label}</span>
+            </button>
+          ))}
+        </div>
+      )}
+
+      {question.type === "MULTIPLE_CHOICE" && !hasOptionImages && (
+        <div className="flex flex-wrap gap-2">
+          {options.map((option) => (
+            <button
+              type="button"
+              key={option.label}
+              onClick={() => onChange(option.label)}
+              className={`rounded-lg border-2 px-4 py-2 font-semibold ${
+                value === option.label ? "border-brand-orange text-brand-orange" : "border-gray-200 text-gray-500"
+              }`}
+            >
+              {option.label}
             </button>
           ))}
         </div>

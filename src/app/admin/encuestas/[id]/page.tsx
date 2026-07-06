@@ -3,6 +3,8 @@ import { db } from "@/lib/db";
 import { QuestionEditor } from "@/components/admin/QuestionEditor";
 import { generateQrDataUrl } from "@/lib/qr";
 import { ShareLink } from "@/components/admin/ShareLink";
+import { SurveyInfoEditor } from "@/components/admin/SurveyInfoEditor";
+import { ResetSurveyButton } from "@/components/admin/ResetSurveyButton";
 import { toggleSurveyActiveAction } from "./actions";
 
 export default async function SurveyEditorPage({
@@ -26,33 +28,44 @@ export default async function SurveyEditorPage({
     <div className="max-w-2xl">
       <div className="mb-6 flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-extrabold text-brand-navy">{survey.title}</h1>
+          <h1 className="text-2xl font-extrabold text-brand-navy">
+            {survey.emoji && <span className="mr-2">{survey.emoji}</span>}
+            {survey.title}
+          </h1>
           <p className="text-sm text-gray-500">/encuesta/{survey.slug}</p>
         </div>
-        <form
-          action={async () => {
-            "use server";
-            await toggleSurveyActiveAction(survey.id, !survey.isActive);
-          }}
-        >
-          <button
-            className={`rounded-full px-3 py-1 text-xs font-semibold ${
-              survey.isActive ? "bg-green-100 text-green-700" : "bg-gray-100 text-gray-500"
-            }`}
+        <div className="flex items-center gap-3">
+          <SurveyInfoEditor
+            surveyId={survey.id}
+            title={survey.title}
+            description={survey.description}
+            emoji={survey.emoji}
+          />
+          <form
+            action={async () => {
+              "use server";
+              await toggleSurveyActiveAction(survey.id, !survey.isActive);
+            }}
           >
-            {survey.isActive ? "Activa (click para desactivar)" : "Inactiva (click para activar)"}
-          </button>
-        </form>
+            <button
+              className={`rounded-full px-3 py-1 text-xs font-semibold ${
+                survey.isActive ? "bg-green-100 text-green-700" : "bg-gray-100 text-gray-500"
+              }`}
+            >
+              {survey.isActive ? "Activa (click para desactivar)" : "Inactiva (click para activar)"}
+            </button>
+          </form>
+        </div>
       </div>
 
       <ShareLink url={publicUrl} qrDataUrl={qrDataUrl} />
 
-      <a
-        href={`/admin/encuestas/${survey.id}/resultados`}
-        className="mb-6 inline-block text-sm font-semibold text-brand-orange"
-      >
-        Ver resultados →
-      </a>
+      <div className="mb-6 flex items-center justify-between">
+        <a href={`/admin/encuestas/${survey.id}/resultados`} className="text-sm font-semibold text-brand-orange">
+          Ver resultados →
+        </a>
+        <ResetSurveyButton surveyId={survey.id} />
+      </div>
 
       <QuestionEditor surveyId={survey.id} questions={survey.questions} />
     </div>

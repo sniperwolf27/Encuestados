@@ -21,6 +21,7 @@ export async function Sidebar() {
             href={`/admin/encuestas/${survey.id}`}
             className="block rounded px-2 py-1 hover:bg-white/10"
           >
+            {survey.emoji && <span className="mr-1">{survey.emoji}</span>}
             {survey.title}
           </Link>
         ))}

@@ -24,6 +24,7 @@ export default async function HomePage() {
             href={`/encuesta/${survey.slug}`}
             className="rounded-2xl bg-white p-6 text-center text-xl font-bold text-brand-navy shadow-lg active:scale-95"
           >
+            {survey.emoji && <span className="mr-2">{survey.emoji}</span>}
             {survey.title}
           </Link>
         ))}

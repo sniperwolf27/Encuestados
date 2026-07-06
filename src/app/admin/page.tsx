@@ -26,13 +26,13 @@ export default async function AdminDashboardPage() {
             >
               <div className="mb-2.5 flex items-center gap-2">
                 <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-to-br from-brand-orange to-orange-400">
-                  <Icon size={17} className="text-white" />
+                  <Icon size={17} className="text-white" aria-hidden="true" />
                 </div>
-                <Badge tone={survey.isActive ? "success" : "neutral"} className="ml-auto">
+                <h2 className="flex-1 text-[15.5px] font-bold text-brand-navy">{survey.title}</h2>
+                <Badge tone={survey.isActive ? "success" : "neutral"}>
                   {survey.isActive ? "Activa" : "Inactiva"}
                 </Badge>
               </div>
-              <h2 className="text-[15.5px] font-bold text-brand-navy">{survey.title}</h2>
               <p className="text-[13px] text-system-secondary">{survey._count.responses} respuestas</p>
             </Link>
           );

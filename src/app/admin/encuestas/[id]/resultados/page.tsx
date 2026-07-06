@@ -55,10 +55,11 @@ export default async function ResultsPage({
     <div>
       <div className="mb-6 flex items-center justify-between">
         <h1 className="text-[26px] font-extrabold tracking-tight text-brand-navy">Resultados: {survey.title}</h1>
-        <a href={`/admin/encuestas/${survey.id}/resultados/export`}>
-          <Button type="button" variant="secondary">
-            ⬇ Exportar CSV
-          </Button>
+        <a
+          href={`/admin/encuestas/${survey.id}/resultados/export`}
+          className="inline-flex min-h-11 items-center justify-center rounded-xl border border-system-separator bg-white px-4 py-2.5 text-sm font-bold text-brand-navy"
+        >
+          ⬇ Exportar CSV
         </a>
       </div>
 

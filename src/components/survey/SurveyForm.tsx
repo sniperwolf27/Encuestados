@@ -2,9 +2,11 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { motion } from "framer-motion";
 import type { Question, Survey } from "@prisma/client";
 import { QuestionField } from "./QuestionField";
 import { ThankYou } from "./ThankYou";
+import { Button } from "@/components/ui/Button";
 import { submitResponseAction } from "@/app/encuesta/[slug]/actions";
 
 export function SurveyForm({
@@ -46,9 +48,14 @@ export function SurveyForm({
   }
 
   return (
-    <main className="mx-auto min-h-screen max-w-lg bg-white px-4 py-10">
-      <h1 className="mb-1 text-2xl font-extrabold text-brand-navy">{survey.title}</h1>
-      {survey.description && <p className="mb-6 text-gray-500">{survey.description}</p>}
+    <motion.main
+      initial={{ opacity: 0, y: 12 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3 }}
+      className="min-h-screen bg-gradient-to-b from-brand-navy to-[#0d1d38] px-4 pb-28 pt-6"
+    >
+      <h1 className="mb-1 text-[28px] font-extrabold tracking-tight text-white">{survey.title}</h1>
+      {survey.description && <p className="mb-5 text-[14px] text-white/55">{survey.description}</p>}
 
       <form onSubmit={handleSubmit}>
         {questions.map((question) => (
@@ -61,33 +68,34 @@ export function SurveyForm({
           />
         ))}
 
-        <div className="mb-6">
-          <p className="mb-2 font-semibold text-brand-navy">Nombre (opcional)</p>
+        <div className="mb-3.5 rounded-2xl bg-white/8 p-[18px] backdrop-blur-xl">
+          <p className="mb-2 text-[15px] font-semibold text-white">Nombre (opcional)</p>
           <input
             value={respondentName}
             onChange={(e) => setRespondentName(e.target.value)}
-            className="w-full rounded-lg border border-gray-300 px-3 py-2"
+            className="mb-4 w-full rounded-xl border border-white/15 bg-white/5 px-3 py-2.5 text-white placeholder:text-white/30"
           />
-        </div>
-        <div className="mb-6">
-          <p className="mb-2 font-semibold text-brand-navy">Teléfono (opcional)</p>
+          <p className="mb-2 text-[15px] font-semibold text-white">Teléfono (opcional)</p>
           <input
             value={respondentPhone}
             onChange={(e) => setRespondentPhone(e.target.value)}
-            className="w-full rounded-lg border border-gray-300 px-3 py-2"
+            className="w-full rounded-xl border border-white/15 bg-white/5 px-3 py-2.5 text-white placeholder:text-white/30"
           />
         </div>
 
-        {errors._form && <p className="mb-4 text-sm text-brand-orange">{errors._form}</p>}
+        {errors._form && <p className="mb-4 text-sm text-orange-300">{errors._form}</p>}
 
-        <button
-          type="submit"
-          disabled={submitting}
-          className="w-full rounded-lg bg-brand-orange py-3 text-lg font-bold text-white disabled:opacity-60"
-        >
-          {submitting ? "Enviando..." : "Enviar"}
-        </button>
+        <div className="fixed inset-x-0 bottom-0 bg-gradient-to-t from-[#0d1d38] via-[#0d1d38]/95 to-transparent p-4 pt-8">
+          <Button
+            type="submit"
+            disabled={submitting}
+            size="large"
+            className="w-full shadow-lg shadow-brand-orange/30"
+          >
+            {submitting ? "Enviando..." : "Enviar respuesta"}
+          </Button>
+        </div>
       </form>
-    </main>
+    </motion.main>
   );
 }

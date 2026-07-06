@@ -4,13 +4,14 @@ import { Star } from "lucide-react";
 
 export function StarRating({ value, onChange }: { value: number | null; onChange: (value: number) => void }) {
   return (
-    <div className="flex gap-2">
+    <div className="flex gap-2" role="group" aria-label="Calificación de 1 a 5 estrellas">
       {[1, 2, 3, 4, 5].map((n) => (
         <button
           type="button"
           key={n}
           onClick={() => onChange(n)}
           aria-label={`${n} estrellas`}
+          aria-pressed={value === n}
           className="flex h-11 w-11 items-center justify-center"
         >
           <Star

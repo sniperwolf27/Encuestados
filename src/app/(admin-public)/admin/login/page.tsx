@@ -50,7 +50,7 @@ function LoginForm() {
 
 export default function LoginPage() {
   return (
-    <main className="flex min-h-screen items-center justify-center bg-gradient-to-b from-brand-navy to-[#0d1d38] px-4">
+    <main className="flex min-h-screen items-center justify-center bg-gradient-to-b from-brand-navy to-brand-navy-dark px-4">
       <Suspense fallback={null}>
         <LoginForm />
       </Suspense>

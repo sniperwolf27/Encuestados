@@ -13,7 +13,7 @@ export default async function HomePage() {
   });
 
   return (
-    <main className="min-h-screen bg-gradient-to-b from-brand-navy to-[#0d1d38] px-5 py-8">
+    <main className="min-h-screen bg-gradient-to-b from-brand-navy to-brand-navy-dark px-5 py-8">
       <div className="mb-1 flex items-center gap-2">
         <Image
           src="/logo.jpg"

@@ -19,7 +19,7 @@ export function ThankYou({ onReset }: { onReset: () => void }) {
   }, [secondsLeft, onReset]);
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-brand-navy to-[#0d1d38] px-4 text-center">
+    <div className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-brand-navy to-brand-navy-dark px-4 text-center">
       <motion.div
         initial={{ scale: 0.5, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}

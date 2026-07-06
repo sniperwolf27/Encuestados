@@ -52,7 +52,7 @@ export function SurveyForm({
       initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3 }}
-      className="min-h-screen bg-gradient-to-b from-brand-navy to-[#0d1d38] px-4 pb-28 pt-6"
+      className="min-h-screen bg-gradient-to-b from-brand-navy to-brand-navy-dark px-4 pb-28 pt-6"
     >
       <h1 className="mb-1 text-[28px] font-extrabold tracking-tight text-white">{survey.title}</h1>
       {survey.description && <p className="mb-5 text-[14px] text-white/55">{survey.description}</p>}
@@ -85,7 +85,7 @@ export function SurveyForm({
 
         {errors._form && <p className="mb-4 text-sm text-orange-300">{errors._form}</p>}
 
-        <div className="fixed inset-x-0 bottom-0 bg-gradient-to-t from-[#0d1d38] via-[#0d1d38]/95 to-transparent p-4 pt-8">
+        <div className="fixed inset-x-0 bottom-0 bg-gradient-to-t from-brand-navy-dark via-brand-navy-dark/95 to-transparent p-4 pt-8">
           <Button
             type="submit"
             disabled={submitting}

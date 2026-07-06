@@ -185,7 +185,12 @@ function SortableQuestionRow({
         ) : (
           <div className="flex items-start justify-between">
             <div className="flex items-start gap-2">
-              <span {...attributes} {...listeners} className="mt-1 cursor-grab select-none text-gray-300">
+              <span
+                {...attributes}
+                {...listeners}
+                aria-label="Reordenar pregunta"
+                className="mt-1 cursor-grab select-none text-gray-300"
+              >
                 <GripVertical size={18} />
               </span>
               <div>

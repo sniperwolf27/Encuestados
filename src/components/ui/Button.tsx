@@ -29,10 +29,10 @@ export function Button({
 } & HTMLMotionProps<"button">) {
   return (
     <motion.button
+      {...props}
       whileTap={{ scale: 0.96 }}
       transition={{ type: "spring", stiffness: 400, damping: 17 }}
       className={`rounded-xl font-bold disabled:opacity-60 ${VARIANT_CLASSES[variant]} ${SIZE_CLASSES[size]} ${className}`}
-      {...props}
     >
       {children}
     </motion.button>

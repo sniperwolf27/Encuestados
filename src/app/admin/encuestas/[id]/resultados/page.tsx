@@ -4,6 +4,7 @@ import { computeKpis } from "@/lib/surveys/kpis";
 import { KpiCards } from "@/components/admin/KpiCards";
 import { ResultsChart } from "@/components/admin/ResultsChart";
 import { ResultsTable } from "@/components/admin/ResultsTable";
+import { Button } from "@/components/ui/Button";
 
 export default async function ResultsPage({
   params,
@@ -53,25 +54,36 @@ export default async function ResultsPage({
   return (
     <div>
       <div className="mb-6 flex items-center justify-between">
-        <h1 className="text-2xl font-extrabold text-brand-navy">Resultados: {survey.title}</h1>
-        <a
-          href={`/admin/encuestas/${survey.id}/resultados/export`}
-          className="rounded-lg bg-brand-navy px-4 py-2 text-sm font-bold text-white"
-        >
-          ⬇ Exportar CSV
+        <h1 className="text-[26px] font-extrabold tracking-tight text-brand-navy">Resultados: {survey.title}</h1>
+        <a href={`/admin/encuestas/${survey.id}/resultados/export`}>
+          <Button type="button" variant="secondary">
+            ⬇ Exportar CSV
+          </Button>
         </a>
       </div>
 
-      <form className="mb-6 flex items-end gap-3 rounded-xl border border-gray-200 bg-white p-4">
+      <form className="mb-6 flex items-end gap-3 rounded-2xl border border-system-separator bg-white p-4">
         <div>
-          <label className="mb-1 block text-xs text-gray-500">Desde</label>
-          <input type="date" name="from" defaultValue={from} className="rounded border px-2 py-1 text-sm" />
+          <label className="mb-1 block text-xs text-system-secondary">Desde</label>
+          <input
+            type="date"
+            name="from"
+            defaultValue={from}
+            className="rounded-lg border border-system-separator px-2 py-1 text-sm"
+          />
         </div>
         <div>
-          <label className="mb-1 block text-xs text-gray-500">Hasta</label>
-          <input type="date" name="to" defaultValue={to} className="rounded border px-2 py-1 text-sm" />
+          <label className="mb-1 block text-xs text-system-secondary">Hasta</label>
+          <input
+            type="date"
+            name="to"
+            defaultValue={to}
+            className="rounded-lg border border-system-separator px-2 py-1 text-sm"
+          />
         </div>
-        <button className="rounded bg-brand-orange px-3 py-1.5 text-sm font-bold text-white">Filtrar</button>
+        <Button type="submit" size="compact">
+          Filtrar
+        </Button>
       </form>
 
       <KpiCards

@@ -1,3 +1,5 @@
+import { Card } from "@/components/ui/Card";
+
 export function KpiCards({
   averageRating,
   nps,
@@ -17,12 +19,12 @@ export function KpiCards({
   ];
 
   return (
-    <div className="mb-6 grid grid-cols-2 gap-4 sm:grid-cols-4">
+    <div className="mb-6 grid grid-cols-2 gap-3.5 sm:grid-cols-4">
       {cards.map((card) => (
-        <div key={card.label} className="rounded-xl border border-gray-200 bg-white p-4">
-          <p className="text-xs text-gray-500">{card.label}</p>
+        <Card key={card.label} variant="solid" className="p-4">
+          <p className="text-xs text-system-secondary">{card.label}</p>
           <p className="text-2xl font-extrabold text-brand-orange">{card.value}</p>
-        </div>
+        </Card>
       ))}
     </div>
   );

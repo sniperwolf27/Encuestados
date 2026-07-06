@@ -24,7 +24,9 @@ export async function submitResponseAction(
     id: q.id,
     type: q.type,
     required: q.required,
-    options: Array.isArray(q.options) ? (q.options as string[]) : null,
+    options: Array.isArray(q.options)
+      ? (q.options as { label: string; imageId?: string }[]).map((o) => o.label)
+      : null,
   }));
 
   const validation = validateAnswers(questionsForValidation, answers);

@@ -5,6 +5,7 @@ import { generateQrDataUrl } from "@/lib/qr";
 import { ShareLink } from "@/components/admin/ShareLink";
 import { SurveyInfoEditor } from "@/components/admin/SurveyInfoEditor";
 import { ResetSurveyButton } from "@/components/admin/ResetSurveyButton";
+import { Badge } from "@/components/ui/Badge";
 import { toggleSurveyActiveAction } from "./actions";
 
 export default async function SurveyEditorPage({
@@ -28,11 +29,11 @@ export default async function SurveyEditorPage({
     <div className="max-w-2xl">
       <div className="mb-6 flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-extrabold text-brand-navy">
+          <h1 className="text-[26px] font-extrabold tracking-tight text-brand-navy">
             {survey.emoji && <span className="mr-2">{survey.emoji}</span>}
             {survey.title}
           </h1>
-          <p className="text-sm text-gray-500">/encuesta/{survey.slug}</p>
+          <p className="text-[13px] text-system-secondary">/encuesta/{survey.slug}</p>
         </div>
         <div className="flex items-center gap-3">
           <SurveyInfoEditor
@@ -47,12 +48,10 @@ export default async function SurveyEditorPage({
               await toggleSurveyActiveAction(survey.id, !survey.isActive);
             }}
           >
-            <button
-              className={`rounded-full px-3 py-1 text-xs font-semibold ${
-                survey.isActive ? "bg-green-100 text-green-700" : "bg-gray-100 text-gray-500"
-              }`}
-            >
-              {survey.isActive ? "Activa (click para desactivar)" : "Inactiva (click para activar)"}
+            <button type="submit">
+              <Badge tone={survey.isActive ? "success" : "neutral"}>
+                {survey.isActive ? "Activa (click para desactivar)" : "Inactiva (click para activar)"}
+              </Badge>
             </button>
           </form>
         </div>

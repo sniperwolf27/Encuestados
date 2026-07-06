@@ -10,12 +10,17 @@ export function SegmentedControl<T extends string>({
   onChange: (value: T) => void;
 }) {
   return (
-    <div className="inline-flex rounded-xl bg-black/15 p-1">
+    <div
+      className="inline-flex rounded-xl bg-black/15 p-1"
+      role="group"
+      aria-label="Selector de opción"
+    >
       {options.map((option) => (
         <button
           key={option.value}
           type="button"
           onClick={() => onChange(option.value)}
+          aria-pressed={value === option.value}
           className={`min-h-11 rounded-lg px-5 text-sm font-semibold transition-colors ${
             value === option.value ? "bg-brand-orange text-white" : "text-white/60"
           }`}

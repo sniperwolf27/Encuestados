@@ -1,5 +1,6 @@
 import { PrismaClient, QuestionType } from "@prisma/client";
 import bcrypt from "bcryptjs";
+import type { SurveyOption } from "../src/lib/surveys/options";
 
 const db = new PrismaClient();
 
@@ -22,29 +23,49 @@ type SeedQuestion = {
   options?: string[];
 };
 
+function toStoredOptions(options?: string[]): SurveyOption[] | undefined {
+  return options ? options.map((label) => ({ label })) : undefined;
+}
+
 async function seedSurvey(
   slug: string,
   title: string,
   description: string,
+  emoji: string,
   order: number,
   questions: SeedQuestion[]
 ) {
   const existing = await db.survey.findUnique({ where: { slug } });
   if (existing) return;
 
+  const factorySnapshot = {
+    title,
+    description,
+    emoji,
+    questions: questions.map((q, i) => ({
+      type: q.type,
+      text: q.text,
+      required: q.required,
+      order: i,
+      options: toStoredOptions(q.options) ?? null,
+    })),
+  };
+
   await db.survey.create({
     data: {
       slug,
       title,
       description,
+      emoji,
       order,
+      factorySnapshot,
       questions: {
         create: questions.map((q, i) => ({
           type: q.type,
           text: q.text,
           required: q.required,
           order: i,
-          options: q.options ?? undefined,
+          options: toStoredOptions(q.options),
         })),
       },
     },
@@ -55,7 +76,7 @@ async function seedSurvey(
 async function main() {
   await seedAdmin();
 
-  await seedSurvey("fotografia", "Fotografía", "Cuéntanos sobre tu sesión de fotos", 0, [
+  await seedSurvey("fotografia", "Fotografía", "Cuéntanos sobre tu sesión de fotos", "📷", 0, [
     { type: "RATING_STARS", text: "¿Cómo calificarías la calidad de las fotos?", required: true },
     { type: "YES_NO", text: "¿El fotógrafo llegó puntual?", required: true },
     { type: "NPS", text: "¿Qué tan probable es que nos recomiendes?", required: true },
@@ -68,7 +89,7 @@ async function main() {
     { type: "TEXT", text: "Comentarios adicionales", required: false },
   ]);
 
-  await seedSurvey("edicion", "Edición", "Cuéntanos sobre la edición de tus fotos", 1, [
+  await seedSurvey("edicion", "Edición", "Cuéntanos sobre la edición de tus fotos", "🎨", 1, [
     { type: "RATING_STARS", text: "¿Cómo calificarías la calidad de la edición final?", required: true },
     { type: "YES_NO", text: "¿El resultado cumplió con lo que esperabas?", required: true },
     { type: "RATING_STARS", text: "¿El tiempo de entrega fue el adecuado?", required: true },
@@ -80,6 +101,7 @@ async function main() {
     "servicio-al-cliente",
     "Servicio al Cliente",
     "Cuéntanos sobre la atención que recibiste",
+    "🎧",
     2,
     [
       { type: "RATING_STARS", text: "¿Cómo calificarías la atención recibida?", required: true },

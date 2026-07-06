@@ -23,6 +23,12 @@ export default function NewSurveyPage() {
           name="description"
           className="mb-4 w-full rounded-lg border border-gray-300 px-3 py-2"
         />
+        <label className="mb-1 block text-sm font-semibold text-brand-navy">Emoji (opcional)</label>
+        <input
+          name="emoji"
+          placeholder="📷"
+          className="mb-4 w-full rounded-lg border border-gray-300 px-3 py-2"
+        />
         {state.error && <p className="mb-4 text-sm text-brand-orange">{state.error}</p>}
         <button
           type="submit"

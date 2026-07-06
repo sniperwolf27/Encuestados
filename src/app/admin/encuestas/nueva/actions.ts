@@ -20,6 +20,7 @@ export async function createSurveyAction(
 ): Promise<CreateSurveyState> {
   const title = String(formData.get("title") ?? "").trim();
   const description = String(formData.get("description") ?? "").trim();
+  const emoji = String(formData.get("emoji") ?? "").trim();
 
   if (!title) {
     return { error: "El título es obligatorio" };
@@ -36,8 +37,15 @@ export async function createSurveyAction(
     data: {
       title,
       description: description || null,
+      emoji: emoji || null,
       slug,
       order: (maxOrder._max.order ?? -1) + 1,
+      factorySnapshot: {
+        title,
+        description: description || null,
+        emoji: emoji || null,
+        questions: [],
+      },
     },
   });
 

@@ -1,48 +1,57 @@
 import Link from "next/link";
 import Image from "next/image";
 import { db } from "@/lib/db";
+import { getSurveyIcon } from "@/lib/survey-icon";
+import { Settings, LogOut, Plus, LayoutGrid } from "lucide-react";
 
 export async function Sidebar() {
   const surveys = await db.survey.findMany({ orderBy: { order: "asc" } });
 
   return (
-    <aside className="w-48 shrink-0 bg-brand-navy p-4 text-white">
-      <div className="mb-8 flex items-center gap-2">
-        <Image src="/logo.jpg" alt="David Fotocolor" width={32} height={20} className="rounded" />
-        <span className="font-bold">Encuestas</span>
+    <aside className="w-56 shrink-0 bg-[#1b1f2b] p-4 text-white">
+      <div className="mb-7 flex items-center gap-2 px-1.5">
+        <Image src="/logo.jpg" alt="David Fotocolor" width={30} height={19} className="rounded object-cover" />
+        <span className="text-sm font-bold">David Fotocolor</span>
       </div>
-      <nav className="space-y-1 text-sm">
-        <Link href="/admin" className="block rounded px-2 py-1 hover:bg-white/10">
-          Dashboard
-        </Link>
-        {surveys.map((survey) => (
-          <Link
-            key={survey.id}
-            href={`/admin/encuestas/${survey.id}`}
-            className="block rounded px-2 py-1 hover:bg-white/10"
-          >
-            {survey.emoji && <span className="mr-1">{survey.emoji}</span>}
-            {survey.title}
-          </Link>
-        ))}
+
+      <p className="mb-2 px-1.5 text-[11px] font-semibold uppercase tracking-wide text-white/35">General</p>
+      <Link href="/admin" className="mb-4 flex items-center gap-2 rounded-lg bg-white/10 px-2.5 py-2 text-[13.5px]">
+        <LayoutGrid size={16} /> Dashboard
+      </Link>
+
+      <p className="mb-2 px-1.5 text-[11px] font-semibold uppercase tracking-wide text-white/35">Encuestas</p>
+      <nav className="mb-4 space-y-0.5">
+        {surveys.map((survey) => {
+          const Icon = getSurveyIcon(survey.emoji);
+          return (
+            <Link
+              key={survey.id}
+              href={`/admin/encuestas/${survey.id}`}
+              className="flex items-center gap-2 rounded-lg px-2.5 py-2 text-[13.5px] text-white/85 hover:bg-white/10"
+            >
+              <Icon size={16} /> {survey.title}
+            </Link>
+          );
+        })}
         <Link
           href="/admin/encuestas/nueva"
-          className="mt-2 block rounded px-2 py-1 text-white/70 hover:bg-white/10"
+          className="flex items-center gap-2 rounded-lg px-2.5 py-2 text-[13px] text-white/45 hover:bg-white/10"
         >
-          + Nueva encuesta
+          <Plus size={16} /> Nueva encuesta
         </Link>
-        <Link
-          href="/admin/configuracion"
-          className="mt-4 block rounded px-2 py-1 text-white/60 hover:bg-white/10"
-        >
-          Configuración
-        </Link>
-        <form action="/admin/logout" method="POST">
-          <button className="mt-1 block w-full rounded px-2 py-1 text-left text-white/60 hover:bg-white/10">
-            Cerrar sesión
-          </button>
-        </form>
       </nav>
+
+      <Link
+        href="/admin/configuracion"
+        className="flex items-center gap-2 rounded-lg px-2.5 py-2 text-[13px] text-white/45 hover:bg-white/10"
+      >
+        <Settings size={16} /> Configuración
+      </Link>
+      <form action="/admin/logout" method="POST">
+        <button className="flex w-full items-center gap-2 rounded-lg px-2.5 py-2 text-left text-[13px] text-white/45 hover:bg-white/10">
+          <LogOut size={16} /> Cerrar sesión
+        </button>
+      </form>
     </aside>
   );
 }

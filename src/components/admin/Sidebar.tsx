@@ -8,14 +8,14 @@ export async function Sidebar() {
   const surveys = await db.survey.findMany({ orderBy: { order: "asc" } });
 
   return (
-    <aside className="w-56 shrink-0 bg-[#1b1f2b] p-4 text-white">
+    <aside aria-label="Navegación de administración" className="w-56 shrink-0 bg-[#1b1f2b] p-4 text-white">
       <div className="mb-7 flex items-center gap-2 px-1.5">
         <Image src="/logo.jpg" alt="David Fotocolor" width={30} height={19} className="rounded object-cover" />
         <span className="text-sm font-bold">David Fotocolor</span>
       </div>
 
       <p className="mb-2 px-1.5 text-[11px] font-semibold uppercase tracking-wide text-white/35">General</p>
-      <Link href="/admin" className="mb-4 flex items-center gap-2 rounded-lg bg-white/10 px-2.5 py-2 text-[13.5px]">
+      <Link href="/admin" aria-current="page" className="mb-4 flex items-center gap-2 rounded-lg bg-white/10 px-2.5 py-2 text-[13.5px]">
         <LayoutGrid size={16} /> Dashboard
       </Link>
 
@@ -48,7 +48,7 @@ export async function Sidebar() {
         <Settings size={16} /> Configuración
       </Link>
       <form action="/admin/logout" method="POST">
-        <button className="flex w-full items-center gap-2 rounded-lg px-2.5 py-2 text-left text-[13px] text-white/45 hover:bg-white/10">
+        <button aria-label="Cerrar sesión" className="flex w-full items-center gap-2 rounded-lg px-2.5 py-2 text-left text-[13px] text-white/45 hover:bg-white/10">
           <LogOut size={16} /> Cerrar sesión
         </button>
       </form>

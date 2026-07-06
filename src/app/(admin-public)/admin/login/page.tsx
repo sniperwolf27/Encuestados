@@ -4,6 +4,8 @@ import { Suspense, useActionState } from "react";
 import { useSearchParams } from "next/navigation";
 import Image from "next/image";
 import { loginAction, type LoginState } from "./actions";
+import { Card } from "@/components/ui/Card";
+import { Button } from "@/components/ui/Button";
 
 const initialState: LoginState = { error: null };
 
@@ -13,40 +15,38 @@ function LoginForm() {
   const [state, formAction, pending] = useActionState(loginAction, initialState);
 
   return (
-    <form action={formAction} className="w-full max-w-sm rounded-xl bg-white p-8 shadow-lg">
-      <Image src="/logo.jpg" alt="David Fotocolor" width={140} height={88} className="mx-auto mb-4 rounded" priority />
-      <h1 className="mb-6 text-center text-2xl font-extrabold text-brand-navy">
-        Encuestas <span className="text-brand-orange">David Fotocolor</span>
-      </h1>
-      <input type="hidden" name="next" value={next} />
-      <label className="mb-1 block text-sm font-semibold text-brand-navy">Usuario</label>
-      <input
-        name="username"
-        required
-        className="mb-4 w-full rounded-lg border border-gray-300 px-3 py-2"
-      />
-      <label className="mb-1 block text-sm font-semibold text-brand-navy">Contraseña</label>
-      <input
-        type="password"
-        name="password"
-        required
-        className="mb-4 w-full rounded-lg border border-gray-300 px-3 py-2"
-      />
-      {state.error && <p className="mb-4 text-sm text-brand-orange">{state.error}</p>}
-      <button
-        type="submit"
-        disabled={pending}
-        className="w-full rounded-lg bg-brand-orange py-2 font-bold text-white disabled:opacity-60"
-      >
-        {pending ? "Entrando..." : "Entrar"}
-      </button>
-    </form>
+    <Card variant="solid" className="w-full max-w-sm p-8">
+      <form action={formAction}>
+        <Image src="/logo.jpg" alt="David Fotocolor" width={140} height={88} className="mx-auto mb-4 rounded-lg" priority />
+        <h1 className="mb-6 text-center text-2xl font-extrabold text-brand-navy">
+          Encuestas <span className="text-brand-orange">David Fotocolor</span>
+        </h1>
+        <input type="hidden" name="next" value={next} />
+        <label className="mb-1 block text-sm font-semibold text-brand-navy">Usuario</label>
+        <input
+          name="username"
+          required
+          className="mb-4 w-full rounded-xl border border-system-separator px-3 py-2.5"
+        />
+        <label className="mb-1 block text-sm font-semibold text-brand-navy">Contraseña</label>
+        <input
+          type="password"
+          name="password"
+          required
+          className="mb-4 w-full rounded-xl border border-system-separator px-3 py-2.5"
+        />
+        {state.error && <p className="mb-4 text-sm text-red-600">{state.error}</p>}
+        <Button type="submit" disabled={pending} className="w-full">
+          {pending ? "Entrando..." : "Entrar"}
+        </Button>
+      </form>
+    </Card>
   );
 }
 
 export default function LoginPage() {
   return (
-    <main className="flex min-h-screen items-center justify-center bg-brand-navy px-4">
+    <main className="flex min-h-screen items-center justify-center bg-gradient-to-b from-brand-navy to-[#0d1d38] px-4">
       <Suspense fallback={null}>
         <LoginForm />
       </Suspense>

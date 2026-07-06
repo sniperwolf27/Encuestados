@@ -63,6 +63,7 @@ export function QuestionField({
               type="button"
               key={option.label}
               onClick={() => onChange(option.label)}
+              aria-pressed={value === option.label}
               className="flex flex-col items-center gap-1.5"
             >
               <div className={value === option.label ? "rounded-full ring-2 ring-brand-orange" : "rounded-full"}>
@@ -81,6 +82,7 @@ export function QuestionField({
               type="button"
               key={option.label}
               onClick={() => onChange(option.label)}
+              aria-pressed={value === option.label}
               className={`min-h-11 rounded-xl border-2 px-4 text-sm font-semibold ${
                 value === option.label ? "border-brand-orange text-brand-orange" : "border-white/20 text-white/70"
               }`}

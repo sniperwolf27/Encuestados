@@ -15,19 +15,22 @@ export default function NewSurveyPage() {
       <h1 className="mb-6 text-[26px] font-extrabold tracking-tight text-brand-navy">Nueva encuesta</h1>
       <Card variant="solid" className="p-6">
         <form action={formAction}>
-          <label className="mb-1 block text-sm font-semibold text-brand-navy">Título</label>
+          <label htmlFor="survey-title" className="mb-1 block text-sm font-semibold text-brand-navy">Título</label>
           <input
+            id="survey-title"
             name="title"
             required
             className="mb-4 w-full rounded-xl border border-system-separator px-3 py-2.5"
           />
-          <label className="mb-1 block text-sm font-semibold text-brand-navy">Descripción</label>
+          <label htmlFor="survey-description" className="mb-1 block text-sm font-semibold text-brand-navy">Descripción</label>
           <textarea
+            id="survey-description"
             name="description"
             className="mb-4 w-full rounded-xl border border-system-separator px-3 py-2.5"
           />
-          <label className="mb-1 block text-sm font-semibold text-brand-navy">Emoji (opcional)</label>
+          <label htmlFor="survey-emoji" className="mb-1 block text-sm font-semibold text-brand-navy">Emoji (opcional)</label>
           <input
+            id="survey-emoji"
             name="emoji"
             placeholder="📷"
             className="mb-4 w-full rounded-xl border border-system-separator px-3 py-2.5"

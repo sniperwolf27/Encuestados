@@ -22,16 +22,20 @@ function LoginForm() {
           Encuestas <span className="text-brand-orange">David Fotocolor</span>
         </h1>
         <input type="hidden" name="next" value={next} />
-        <label className="mb-1 block text-sm font-semibold text-brand-navy">Usuario</label>
+        <label htmlFor="login-username" className="mb-1 block text-sm font-semibold text-brand-navy">Usuario</label>
         <input
+          id="login-username"
           name="username"
+          autoComplete="username"
           required
           className="mb-4 w-full rounded-xl border border-system-separator px-3 py-2.5"
         />
-        <label className="mb-1 block text-sm font-semibold text-brand-navy">Contraseña</label>
+        <label htmlFor="login-password" className="mb-1 block text-sm font-semibold text-brand-navy">Contraseña</label>
         <input
+          id="login-password"
           type="password"
           name="password"
+          autoComplete="current-password"
           required
           className="mb-4 w-full rounded-xl border border-system-separator px-3 py-2.5"
         />

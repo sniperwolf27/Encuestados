@@ -1,6 +1,7 @@
 "use client";
 
 import { resetSurveyAction } from "@/app/admin/encuestas/[id]/actions";
+import { Button } from "@/components/ui/Button";
 
 export function ResetSurveyButton({ surveyId }: { surveyId: string }) {
   return (
@@ -13,9 +14,9 @@ export function ResetSurveyButton({ surveyId }: { surveyId: string }) {
         if (!confirmed) e.preventDefault();
       }}
     >
-      <button className="rounded-lg border border-red-300 px-3 py-1.5 text-xs font-bold text-red-600 hover:bg-red-50">
+      <Button type="submit" variant="destructive" size="compact">
         Resetear encuesta
-      </button>
+      </Button>
     </form>
   );
 }

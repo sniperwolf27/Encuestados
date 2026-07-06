@@ -23,6 +23,17 @@ import {
   deleteQuestionAction,
   reorderQuestionsAction,
 } from "@/app/admin/encuestas/[id]/actions";
+import { ImageUploadField } from "./ImageUploadField";
+import { QuestionOptionsEditor, type OptionRow } from "./QuestionOptionsEditor";
+
+function optionRowsFromQuestion(question: Question): OptionRow[] {
+  if (!Array.isArray(question.options)) return [];
+  return (question.options as { label: string; imageId?: string }[]).map((o, i) => ({
+    key: `existing-${i}`,
+    label: o.label,
+    imageId: o.imageId,
+  }));
+}
 
 export function QuestionEditor({
   surveyId,
@@ -78,11 +89,8 @@ export function QuestionEditor({
           ))}
         </select>
         <input name="text" placeholder="Texto de la pregunta" required className="block w-full rounded border px-2 py-1 text-sm" />
-        <input
-          name="options"
-          placeholder="Opciones separadas por coma (solo opción múltiple)"
-          className="block w-full rounded border px-2 py-1 text-sm"
-        />
+        <ImageUploadField name="question" label="Imagen general de la pregunta (opcional)" />
+        <QuestionOptionsEditor initialOptions={[]} />
         <label className="flex items-center gap-2 text-sm">
           <input type="checkbox" name="required" defaultChecked />
           Obligatoria
@@ -144,14 +152,12 @@ function SortableQuestionRow({
             required
             className="block w-full rounded border px-2 py-1 text-sm"
           />
-          <input
-            name="options"
-            defaultValue={
-              Array.isArray(question.options) ? (question.options as string[]).join(", ") : ""
-            }
-            placeholder="Opciones separadas por coma (solo opción múltiple)"
-            className="block w-full rounded border px-2 py-1 text-sm"
+          <ImageUploadField
+            name="question"
+            label="Imagen general de la pregunta (opcional)"
+            existingImageId={question.imageId}
           />
+          <QuestionOptionsEditor initialOptions={optionRowsFromQuestion(question)} />
           <label className="flex items-center gap-2 text-sm">
             <input type="checkbox" name="required" defaultChecked={question.required} />
             Obligatoria

@@ -6,15 +6,19 @@ import { motion } from "framer-motion";
 import type { Question, Survey } from "@prisma/client";
 import { QuestionField } from "./QuestionField";
 import { ThankYou } from "./ThankYou";
+import { CollaboratorStep, type CollaboratorOption } from "./CollaboratorStep";
 import { Button } from "@/components/ui/Button";
 import { submitResponseAction } from "@/app/encuesta/[slug]/actions";
+import { shouldShowCollaboratorStep } from "@/lib/surveys/collaborator-step";
 
 export function SurveyForm({
   survey,
   questions,
+  collaborators,
 }: {
   survey: Survey;
   questions: Question[];
+  collaborators: CollaboratorOption[];
 }) {
   const [answers, setAnswers] = useState<Record<string, unknown>>({});
   const [respondentName, setRespondentName] = useState("");
@@ -22,12 +26,22 @@ export function SurveyForm({
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [collaboratorId, setCollaboratorId] = useState<string | null>(null);
+  const [collaboratorStepDone, setCollaboratorStepDone] = useState(
+    !shouldShowCollaboratorStep(collaborators.length)
+  );
   const router = useRouter();
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setSubmitting(true);
-    const result = await submitResponseAction(survey.slug, answers, respondentName, respondentPhone);
+    const result = await submitResponseAction(
+      survey.slug,
+      answers,
+      respondentName,
+      respondentPhone,
+      collaboratorId
+    );
     setSubmitting(false);
 
     if (!result.success) {
@@ -45,6 +59,18 @@ export function SurveyForm({
 
   if (submitted) {
     return <ThankYou onReset={goToSelector} />;
+  }
+
+  if (!collaboratorStepDone) {
+    return (
+      <CollaboratorStep
+        collaborators={collaborators}
+        onSelect={(id) => {
+          setCollaboratorId(id);
+          setCollaboratorStepDone(true);
+        }}
+      />
+    );
   }
 
   return (
@@ -77,6 +103,9 @@ export function SurveyForm({
           />
           <p className="mb-2 text-[15px] font-semibold text-white">Teléfono (opcional)</p>
           <input
+            type="tel"
+            inputMode="numeric"
+            autoComplete="off"
             value={respondentPhone}
             onChange={(e) => setRespondentPhone(e.target.value)}
             className="w-full rounded-xl border border-white/15 bg-white/5 px-3 py-2.5 text-white placeholder:text-white/30"

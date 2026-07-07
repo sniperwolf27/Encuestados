@@ -9,7 +9,8 @@ export async function submitResponseAction(
   slug: string,
   answers: Record<string, unknown>,
   respondentName: string,
-  respondentPhone: string
+  respondentPhone: string,
+  collaboratorId: string | null
 ): Promise<SubmitResult> {
   const survey = await db.survey.findUnique({
     where: { slug },
@@ -39,6 +40,7 @@ export async function submitResponseAction(
       surveyId: survey.id,
       respondentName: respondentName.trim() || null,
       respondentPhone: respondentPhone.trim() || null,
+      collaboratorId,
       answers: {
         create: survey.questions
           .filter((q) => answers[q.id] !== undefined)

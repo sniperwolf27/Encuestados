@@ -12,10 +12,23 @@ export default async function PublicSurveyPage({
   const { slug } = await params;
   const survey = await db.survey.findUnique({
     where: { slug },
-    include: { questions: { orderBy: { order: "asc" } } },
+    include: {
+      questions: { orderBy: { order: "asc" } },
+      collaborators: { orderBy: { order: "asc" } },
+    },
   });
 
   if (!survey || !survey.isActive) notFound();
 
-  return <SurveyForm survey={survey} questions={survey.questions} />;
+  return (
+    <SurveyForm
+      survey={survey}
+      questions={survey.questions}
+      collaborators={survey.collaborators.map((c) => ({
+        id: c.id,
+        name: c.name,
+        imageId: c.imageId,
+      }))}
+    />
+  );
 }

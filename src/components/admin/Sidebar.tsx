@@ -8,7 +8,7 @@ export async function Sidebar() {
   const surveys = await db.survey.findMany({ orderBy: { order: "asc" } });
 
   return (
-    <aside aria-label="Navegación de administración" className="w-56 shrink-0 bg-[#1b1f2b] p-4 text-white">
+    <aside aria-label="Navegación de administración" className="h-full w-56 shrink-0 overflow-y-auto bg-[#1b1f2b] p-4 text-white">
       <div className="mb-7 flex items-center gap-2 px-1.5">
         <Image src="/logo.jpg" alt="David Fotocolor" width={30} height={19} className="rounded object-cover" />
         <span className="text-sm font-bold">David Fotocolor</span>

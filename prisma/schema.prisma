@@ -41,6 +41,7 @@ model Survey {
   factorySnapshot Json?
   questions       Question[]
   responses       Response[]
+  collaborators   Collaborator[]
   createdAt       DateTime   @default(now())
   updatedAt       DateTime   @updatedAt
 }
@@ -61,13 +62,15 @@ model Question {
 }
 
 model Response {
-  id              String   @id @default(cuid())
+  id              String        @id @default(cuid())
   surveyId        String
-  survey          Survey   @relation(fields: [surveyId], references: [id], onDelete: Cascade)
+  survey          Survey        @relation(fields: [surveyId], references: [id], onDelete: Cascade)
   respondentName  String?
   respondentPhone String?
+  collaboratorId  String?
+  collaborator    Collaborator? @relation(fields: [collaboratorId], references: [id], onDelete: SetNull)
   answers         Answer[]
-  createdAt       DateTime @default(now())
+  createdAt       DateTime      @default(now())
 }
 
 model Answer {
@@ -77,4 +80,16 @@ model Answer {
   questionId String
   question   Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
   value      Json
+}
+
+model Collaborator {
+  id        String     @id @default(cuid())
+  surveyId  String
+  survey    Survey     @relation(fields: [surveyId], references: [id], onDelete: Cascade)
+  name      String
+  imageId   String?
+  order     Int        @default(0)
+  responses Response[]
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
 }

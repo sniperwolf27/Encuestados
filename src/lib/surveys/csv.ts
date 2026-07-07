@@ -4,6 +4,7 @@ export type ResponseForCsv = {
   createdAt: Date;
   respondentName: string | null;
   respondentPhone: string | null;
+  collaboratorName: string | null;
   answers: { questionId: string; value: unknown }[];
 };
 
@@ -16,7 +17,7 @@ function formatDate(date: Date): string {
 }
 
 export function responsesToCsv(questions: QuestionForCsv[], responses: ResponseForCsv[]): string {
-  const header = ["Fecha", "Nombre", "Telefono", ...questions.map((q) => escapeCsvField(q.text))].join(
+  const header = ["Fecha", "Nombre", "Telefono", "Colaborador", ...questions.map((q) => escapeCsvField(q.text))].join(
     ","
   );
 
@@ -32,6 +33,7 @@ export function responsesToCsv(questions: QuestionForCsv[], responses: ResponseF
       formatDate(response.createdAt),
       response.respondentName ? escapeCsvField(response.respondentName) : "",
       response.respondentPhone ? escapeCsvField(response.respondentPhone) : "",
+      response.collaboratorName ? escapeCsvField(response.collaboratorName) : "",
       ...answerCells,
     ].join(",");
   });

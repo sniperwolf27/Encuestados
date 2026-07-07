@@ -8,7 +8,7 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
     where: { id },
     include: {
       questions: { orderBy: { order: "asc" } },
-      responses: { include: { answers: true }, orderBy: { createdAt: "desc" } },
+      responses: { include: { answers: true, collaborator: true }, orderBy: { createdAt: "desc" } },
     },
   });
 
@@ -22,6 +22,7 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
       createdAt: r.createdAt,
       respondentName: r.respondentName,
       respondentPhone: r.respondentPhone,
+      collaboratorName: r.collaborator?.name ?? null,
       answers: r.answers.map((a) => ({ questionId: a.questionId, value: a.value })),
     }))
   );

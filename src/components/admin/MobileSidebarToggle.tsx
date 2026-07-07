@@ -60,8 +60,7 @@ export function MobileSidebarToggle({ children }: { children: React.ReactNode })
       )}
 
       <div
-        role="dialog"
-        aria-modal="true"
+        {...(open ? { role: "dialog", "aria-modal": "true" } : {})}
         onClick={() => setOpen(false)}
         className={`fixed inset-y-0 left-0 z-50 transition-transform duration-200 md:static md:z-auto md:translate-x-0 md:transition-none ${
           open ? "translate-x-0" : "-translate-x-full"

@@ -11,7 +11,7 @@ describe("responsesToCsv", () => {
     const csv = responsesToCsv(questions, []);
     const [header] = csv.split("\n");
     expect(header).toBe(
-      'Fecha,Nombre,Telefono,"¿Cómo calificarías la calidad?","Comentarios"'
+      'Fecha,Nombre,Telefono,Colaborador,"¿Cómo calificarías la calidad?","Comentarios"'
     );
   });
 
@@ -21,6 +21,7 @@ describe("responsesToCsv", () => {
         createdAt: new Date("2026-07-02T15:00:00Z"),
         respondentName: "Ana R.",
         respondentPhone: null,
+        collaboratorName: "Juan Pérez",
         answers: [
           { questionId: "q1", value: 5 },
           { questionId: "q2", value: "Excelente atención" },
@@ -29,7 +30,7 @@ describe("responsesToCsv", () => {
     ];
     const csv = responsesToCsv(questions, responses);
     const rows = csv.split("\n");
-    expect(rows[1]).toBe('2026-07-02,"Ana R.",,"5","Excelente atención"');
+    expect(rows[1]).toBe('2026-07-02,"Ana R.",,"Juan Pérez","5","Excelente atención"');
   });
 
   it("escapes commas and quotes inside values", () => {
@@ -38,6 +39,7 @@ describe("responsesToCsv", () => {
         createdAt: new Date("2026-07-02T15:00:00Z"),
         respondentName: null,
         respondentPhone: null,
+        collaboratorName: null,
         answers: [
           { questionId: "q1", value: 4 },
           { questionId: "q2", value: 'Buen trabajo, "muy" profesional' },
@@ -46,6 +48,6 @@ describe("responsesToCsv", () => {
     ];
     const csv = responsesToCsv(questions, responses);
     const rows = csv.split("\n");
-    expect(rows[1]).toBe('2026-07-02,,,"4","Buen trabajo, ""muy"" profesional"');
+    expect(rows[1]).toBe('2026-07-02,,,,"4","Buen trabajo, ""muy"" profesional"');
   });
 });

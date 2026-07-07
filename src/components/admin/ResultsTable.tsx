@@ -51,7 +51,7 @@ export function ResultsTable({ rows }: { rows: Row[] }) {
         {rows.map((row) => (
           <div key={row.id} className="space-y-1.5 p-4">
             <p className="text-xs text-system-secondary">{row.createdAt.toISOString().slice(0, 10)}</p>
-            <p className="font-semibold text-brand-navy">{row.respondentName ?? "Anónimo"}</p>
+            <p className="font-semibold text-brand-navy">{row.respondentName ?? "—"}</p>
             {row.collaboratorName && (
               <p className="text-xs text-system-secondary">Atendido por: {row.collaboratorName}</p>
             )}

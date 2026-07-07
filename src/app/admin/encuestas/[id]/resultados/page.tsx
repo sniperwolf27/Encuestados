@@ -30,7 +30,7 @@ export default async function ResultsPage({
         lte: to ? new Date(`${to}T23:59:59`) : undefined,
       },
     },
-    include: { answers: true },
+    include: { answers: true, collaborator: true },
     orderBy: { createdAt: "desc" },
   });
 
@@ -45,6 +45,7 @@ export default async function ResultsPage({
     id: r.id,
     createdAt: r.createdAt,
     respondentName: r.respondentName,
+    collaboratorName: r.collaborator?.name ?? null,
     answers: r.answers.map((a) => ({
       questionText: questionTextById.get(a.questionId) ?? "?",
       value: a.value,
@@ -63,7 +64,7 @@ export default async function ResultsPage({
         </a>
       </div>
 
-      <form className="mb-6 flex items-end gap-3 rounded-2xl border border-system-separator bg-white p-4">
+      <form className="mb-6 flex flex-wrap items-end gap-3 rounded-2xl border border-system-separator bg-white p-4">
         <div>
           <label className="mb-1 block text-xs text-system-secondary">Desde</label>
           <input

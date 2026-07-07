@@ -45,6 +45,7 @@ export async function createSurveyAction(
         description: description || null,
         emoji: emoji || null,
         questions: [],
+        collaborators: [],
       },
     },
   });

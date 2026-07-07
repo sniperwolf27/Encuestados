@@ -48,6 +48,70 @@ async function resolveOptionsFromFormData(formData: FormData) {
   return buildOptionsFromRows(labels, resolvedImageIds);
 }
 
+async function resolveCollaboratorImageId(
+  formData: FormData,
+  existingImageId: string | null
+): Promise<string | null> {
+  const file = formData.get("collaboratorImage");
+  const removeImage = String(formData.get("collaboratorRemoveImage") ?? "") === "true";
+  const newImageId = file instanceof File && isValidImageFile(file) ? await createImage(file) : null;
+  return resolveImageId({ existingImageId, removeImage, newImageId }) ?? null;
+}
+
+export async function addCollaboratorAction(formData: FormData) {
+  const surveyId = String(formData.get("surveyId"));
+  const name = String(formData.get("name") ?? "").trim();
+  if (!name) return;
+
+  const imageId = await resolveCollaboratorImageId(formData, null);
+
+  const maxOrder = await db.collaborator.aggregate({
+    where: { surveyId },
+    _max: { order: true },
+  });
+
+  await db.collaborator.create({
+    data: {
+      surveyId,
+      name,
+      imageId,
+      order: (maxOrder._max.order ?? -1) + 1,
+    },
+  });
+
+  revalidatePath(`/admin/encuestas/${surveyId}`);
+}
+
+export async function updateCollaboratorAction(formData: FormData) {
+  const id = String(formData.get("id"));
+  const surveyId = String(formData.get("surveyId"));
+  const name = String(formData.get("name") ?? "").trim();
+  const existingImageId = String(formData.get("collaboratorExistingImageId") ?? "") || null;
+
+  if (!name) return;
+
+  const imageId = await resolveCollaboratorImageId(formData, existingImageId);
+
+  await db.collaborator.update({
+    where: { id },
+    data: { name, imageId },
+  });
+
+  revalidatePath(`/admin/encuestas/${surveyId}`);
+}
+
+export async function deleteCollaboratorAction(id: string, surveyId: string) {
+  await db.collaborator.delete({ where: { id } });
+  revalidatePath(`/admin/encuestas/${surveyId}`);
+}
+
+export async function reorderCollaboratorsAction(surveyId: string, orderedIds: string[]) {
+  await db.$transaction(
+    orderedIds.map((id, index) => db.collaborator.update({ where: { id }, data: { order: index } }))
+  );
+  revalidatePath(`/admin/encuestas/${surveyId}`);
+}
+
 export async function addQuestionAction(formData: FormData) {
   const surveyId = String(formData.get("surveyId"));
   const type = String(formData.get("type")) as QuestionType;
@@ -144,11 +208,18 @@ type FactorySnapshotQuestion = {
   options: Prisma.JsonValue | null;
 };
 
+type FactorySnapshotCollaborator = {
+  name: string;
+  imageId: string | null;
+  order: number;
+};
+
 type FactorySnapshot = {
   title: string;
   description: string | null;
   emoji: string | null;
   questions: FactorySnapshotQuestion[];
+  collaborators?: FactorySnapshotCollaborator[];
 };
 
 export async function resetSurveyAction(surveyId: string) {
@@ -160,6 +231,7 @@ export async function resetSurveyAction(surveyId: string) {
   await db.$transaction([
     db.response.deleteMany({ where: { surveyId } }),
     db.question.deleteMany({ where: { surveyId } }),
+    db.collaborator.deleteMany({ where: { surveyId } }),
     db.survey.update({
       where: { id: surveyId },
       data: {
@@ -173,6 +245,15 @@ export async function resetSurveyAction(surveyId: string) {
             required: q.required,
             order: q.order,
             options: q.options ?? undefined,
+          })),
+        },
+        collaborators: {
+          // snapshot.collaborators is optional: surveys created before this feature existed
+          // won't have it in their stored factorySnapshot JSON
+          create: (snapshot.collaborators ?? []).map((c) => ({
+            name: c.name,
+            imageId: c.imageId ?? undefined,
+            order: c.order,
           })),
         },
       },

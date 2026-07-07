@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import { db } from "@/lib/db";
 import { QuestionEditor } from "@/components/admin/QuestionEditor";
+import { CollaboratorEditor } from "@/components/admin/CollaboratorEditor";
 import { generateQrDataUrl } from "@/lib/qr";
 import { ShareLink } from "@/components/admin/ShareLink";
 import { SurveyInfoEditor } from "@/components/admin/SurveyInfoEditor";
@@ -16,7 +17,10 @@ export default async function SurveyEditorPage({
   const { id } = await params;
   const survey = await db.survey.findUnique({
     where: { id },
-    include: { questions: { orderBy: { order: "asc" } } },
+    include: {
+      questions: { orderBy: { order: "asc" } },
+      collaborators: { orderBy: { order: "asc" } },
+    },
   });
 
   if (!survey) notFound();
@@ -66,6 +70,7 @@ export default async function SurveyEditorPage({
         <ResetSurveyButton surveyId={survey.id} />
       </div>
 
+      <CollaboratorEditor surveyId={survey.id} collaborators={survey.collaborators} />
       <QuestionEditor surveyId={survey.id} questions={survey.questions} />
     </div>
   );

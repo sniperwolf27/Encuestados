@@ -16,7 +16,7 @@ export function CollaboratorStep({
       <button
         type="button"
         onClick={() => onSelect(null)}
-        className="mb-6 text-sm font-semibold text-white/60"
+        className="mb-6 flex min-h-11 items-center px-1 text-sm font-semibold text-white/60"
       >
         Omitir →
       </button>

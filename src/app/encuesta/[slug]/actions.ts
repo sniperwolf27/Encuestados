@@ -14,7 +14,7 @@ export async function submitResponseAction(
 ): Promise<SubmitResult> {
   const survey = await db.survey.findUnique({
     where: { slug },
-    include: { questions: true },
+    include: { questions: true, collaborators: true },
   });
 
   if (!survey || !survey.isActive) {
@@ -33,6 +33,10 @@ export async function submitResponseAction(
   const validation = validateAnswers(questionsForValidation, answers);
   if (!validation.valid) {
     return { success: false, errors: validation.errors };
+  }
+
+  if (collaboratorId && !survey.collaborators.some((c) => c.id === collaboratorId)) {
+    return { success: false, errors: { _form: "Colaborador inválido" } };
   }
 
   await db.response.create({

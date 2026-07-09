@@ -231,7 +231,6 @@ export async function resetSurveyAction(surveyId: string) {
   await db.$transaction([
     db.response.deleteMany({ where: { surveyId } }),
     db.question.deleteMany({ where: { surveyId } }),
-    db.collaborator.deleteMany({ where: { surveyId } }),
     db.survey.update({
       where: { id: surveyId },
       data: {
@@ -245,15 +244,6 @@ export async function resetSurveyAction(surveyId: string) {
             required: q.required,
             order: q.order,
             options: q.options ?? undefined,
-          })),
-        },
-        collaborators: {
-          // snapshot.collaborators is optional: surveys created before this feature existed
-          // won't have it in their stored factorySnapshot JSON
-          create: (snapshot.collaborators ?? []).map((c) => ({
-            name: c.name,
-            imageId: c.imageId ?? undefined,
-            order: c.order,
           })),
         },
       },

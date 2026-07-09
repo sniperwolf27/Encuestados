@@ -288,6 +288,7 @@ export async function duplicateSurveyAction(surveyId: string) {
       emoji: survey.emoji,
       slug,
       order: (maxOrder._max.order ?? -1) + 1,
+      isActive: false,
       collaboratorRequired: survey.collaboratorRequired,
       factorySnapshot: {
         title: newTitle,

@@ -2,17 +2,9 @@
 
 import { redirect } from "next/navigation";
 import { db } from "@/lib/db";
+import { slugify } from "@/lib/surveys/slug";
 
 export type CreateSurveyState = { error: string | null };
-
-function slugify(input: string): string {
-  return input
-    .toLowerCase()
-    .normalize("NFD")
-    .replace(/[̀-ͯ]/g, "")
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/(^-|-$)/g, "");
-}
 
 export async function createSurveyAction(
   _prevState: CreateSurveyState,

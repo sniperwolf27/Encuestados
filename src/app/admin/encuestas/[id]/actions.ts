@@ -1,10 +1,12 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 import { db } from "@/lib/db";
 import { Prisma, QuestionType } from "@prisma/client";
 import { isValidImageFile, resolveImageId } from "@/lib/images";
 import { buildOptionsFromRows } from "@/lib/surveys/options";
+import { slugify } from "@/lib/surveys/slug";
 
 export async function toggleSurveyActiveAction(surveyId: string, isActive: boolean) {
   await db.survey.update({ where: { id: surveyId }, data: { isActive } });
@@ -256,4 +258,73 @@ export async function resetSurveyAction(surveyId: string) {
   ]);
 
   revalidatePath(`/admin/encuestas/${surveyId}`);
+}
+
+export async function duplicateSurveyAction(surveyId: string) {
+  const survey = await db.survey.findUnique({
+    where: { id: surveyId },
+    include: {
+      questions: { orderBy: { order: "asc" } },
+      collaborators: { orderBy: { order: "asc" } },
+    },
+  });
+  if (!survey) return;
+
+  const newTitle = `${survey.title} (copia)`;
+  const baseSlug = slugify(newTitle);
+  let slug = baseSlug;
+  let suffix = 2;
+  while (await db.survey.findUnique({ where: { slug } })) {
+    slug = `${baseSlug}-${suffix}`;
+    suffix++;
+  }
+
+  const maxOrder = await db.survey.aggregate({ _max: { order: true } });
+
+  const newSurvey = await db.survey.create({
+    data: {
+      title: newTitle,
+      description: survey.description,
+      emoji: survey.emoji,
+      slug,
+      order: (maxOrder._max.order ?? -1) + 1,
+      collaboratorRequired: survey.collaboratorRequired,
+      factorySnapshot: {
+        title: newTitle,
+        description: survey.description,
+        emoji: survey.emoji,
+        questions: survey.questions.map((q) => ({
+          type: q.type,
+          text: q.text,
+          required: q.required,
+          order: q.order,
+          options: q.options,
+        })),
+        collaborators: survey.collaborators.map((c) => ({
+          name: c.name,
+          imageId: c.imageId,
+          order: c.order,
+        })),
+      },
+      questions: {
+        create: survey.questions.map((q) => ({
+          type: q.type,
+          text: q.text,
+          required: q.required,
+          order: q.order,
+          options: q.options ?? undefined,
+          imageId: q.imageId,
+        })),
+      },
+      collaborators: {
+        create: survey.collaborators.map((c) => ({
+          name: c.name,
+          imageId: c.imageId,
+          order: c.order,
+        })),
+      },
+    },
+  });
+
+  redirect(`/admin/encuestas/${newSurvey.id}`);
 }

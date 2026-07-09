@@ -7,7 +7,8 @@ import { ShareLink } from "@/components/admin/ShareLink";
 import { SurveyInfoEditor } from "@/components/admin/SurveyInfoEditor";
 import { ResetSurveyButton } from "@/components/admin/ResetSurveyButton";
 import { Badge } from "@/components/ui/Badge";
-import { toggleSurveyActiveAction, toggleCollaboratorRequiredAction } from "./actions";
+import { Button } from "@/components/ui/Button";
+import { toggleSurveyActiveAction, toggleCollaboratorRequiredAction, duplicateSurveyAction } from "./actions";
 
 export default async function SurveyEditorPage({
   params,
@@ -67,7 +68,14 @@ export default async function SurveyEditorPage({
         <a href={`/admin/encuestas/${survey.id}/resultados`} className="text-sm font-semibold text-brand-orange">
           Ver resultados →
         </a>
-        <ResetSurveyButton surveyId={survey.id} />
+        <div className="flex gap-2">
+          <form action={duplicateSurveyAction.bind(null, survey.id)}>
+            <Button type="submit" variant="secondary" size="compact">
+              Duplicar
+            </Button>
+          </form>
+          <ResetSurveyButton surveyId={survey.id} />
+        </div>
       </div>
 
       <form

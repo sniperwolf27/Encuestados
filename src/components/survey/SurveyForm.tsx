@@ -26,6 +26,7 @@ export function SurveyForm({
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [googleReviewLink, setGoogleReviewLink] = useState<string | null>(null);
   const [collaboratorId, setCollaboratorId] = useState<string | null>(null);
   const [collaboratorStepDone, setCollaboratorStepDone] = useState(
     !shouldShowCollaboratorStep(collaborators.length)
@@ -50,6 +51,7 @@ export function SurveyForm({
     }
 
     setErrors({});
+    setGoogleReviewLink(result.googleReviewLink ?? null);
     setSubmitted(true);
   }
 
@@ -58,7 +60,7 @@ export function SurveyForm({
   }
 
   if (submitted) {
-    return <ThankYou onReset={goToSelector} />;
+    return <ThankYou onReset={goToSelector} googleReviewLink={googleReviewLink} />;
   }
 
   if (!collaboratorStepDone) {

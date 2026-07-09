@@ -6,7 +6,13 @@ import { Check } from "lucide-react";
 
 const RESET_SECONDS = 6;
 
-export function ThankYou({ onReset }: { onReset: () => void }) {
+export function ThankYou({
+  onReset,
+  googleReviewLink,
+}: {
+  onReset: () => void;
+  googleReviewLink: string | null;
+}) {
   const [secondsLeft, setSecondsLeft] = useState(RESET_SECONDS);
 
   useEffect(() => {
@@ -29,7 +35,17 @@ export function ThankYou({ onReset }: { onReset: () => void }) {
         <Check size={40} className="text-white" strokeWidth={3} />
       </motion.div>
       <h1 className="mb-2 text-[26px] font-extrabold text-white">¡Gracias por tu respuesta!</h1>
-      <p className="text-[15px] text-white/55">Volviendo al inicio en {secondsLeft}s...</p>
+      <p className="mb-4 text-[15px] text-white/55">Volviendo al inicio en {secondsLeft}s...</p>
+      {googleReviewLink && (
+        <a
+          href={googleReviewLink}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex min-h-11 items-center justify-center rounded-xl border border-white/20 bg-white/10 px-4 py-2.5 text-sm font-bold text-white"
+        >
+          Déjanos tu reseña en Google
+        </a>
+      )}
     </div>
   );
 }

@@ -2,8 +2,14 @@
 
 import { db } from "@/lib/db";
 import { validateAnswers, type QuestionForValidation } from "@/lib/surveys/validate-answers";
+import { hasLowRating, hasHighRating } from "@/lib/surveys/rating-alerts";
+import { sendLowRatingAlert } from "@/lib/email";
 
-export type SubmitResult = { success: boolean; errors?: Record<string, string> };
+export type SubmitResult = {
+  success: boolean;
+  errors?: Record<string, string>;
+  googleReviewLink?: string | null;
+};
 
 export async function submitResponseAction(
   slug: string,
@@ -43,11 +49,14 @@ export async function submitResponseAction(
     return { success: false, errors: { _form: "Debes seleccionar quién te atendió" } };
   }
 
-  await db.response.create({
+  const trimmedName = respondentName.trim() || null;
+  const trimmedPhone = respondentPhone.trim() || null;
+
+  const response = await db.response.create({
     data: {
       surveyId: survey.id,
-      respondentName: respondentName.trim() || null,
-      respondentPhone: respondentPhone.trim() || null,
+      respondentName: trimmedName,
+      respondentPhone: trimmedPhone,
       collaboratorId,
       answers: {
         create: survey.questions
@@ -57,5 +66,32 @@ export async function submitResponseAction(
     },
   });
 
-  return { success: true };
+  const answersForRatingCheck = survey.questions
+    .filter((q) => answers[q.id] !== undefined)
+    .map((q) => ({ questionId: q.id, value: answers[q.id] }));
+
+  const isLowRating = hasLowRating(survey.questions, answersForRatingCheck);
+  const isHighRating = hasHighRating(survey.questions, answersForRatingCheck);
+
+  let googleReviewLink: string | null = null;
+
+  if (isLowRating || isHighRating) {
+    const setting = await db.setting.findUnique({ where: { id: "singleton" } });
+
+    if (isLowRating && setting?.alertEmail) {
+      await sendLowRatingAlert({
+        to: setting.alertEmail,
+        surveyTitle: survey.title,
+        respondentName: trimmedName,
+        respondentPhone: trimmedPhone,
+        createdAt: response.createdAt,
+      });
+    }
+
+    if (isHighRating) {
+      googleReviewLink = setting?.googleReviewLink ?? null;
+    }
+  }
+
+  return { success: true, googleReviewLink };
 }

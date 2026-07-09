@@ -7,7 +7,7 @@ import { ShareLink } from "@/components/admin/ShareLink";
 import { SurveyInfoEditor } from "@/components/admin/SurveyInfoEditor";
 import { ResetSurveyButton } from "@/components/admin/ResetSurveyButton";
 import { Badge } from "@/components/ui/Badge";
-import { toggleSurveyActiveAction } from "./actions";
+import { toggleSurveyActiveAction, toggleCollaboratorRequiredAction } from "./actions";
 
 export default async function SurveyEditorPage({
   params,
@@ -70,6 +70,21 @@ export default async function SurveyEditorPage({
         <ResetSurveyButton surveyId={survey.id} />
       </div>
 
+      <form
+        action={async () => {
+          "use server";
+          await toggleCollaboratorRequiredAction(survey.id, !survey.collaboratorRequired);
+        }}
+        className="mb-3"
+      >
+        <button type="submit">
+          <Badge tone={survey.collaboratorRequired ? "success" : "neutral"}>
+            {survey.collaboratorRequired
+              ? "Selección de colaborador obligatoria (click para hacerla opcional)"
+              : "Selección de colaborador opcional (click para hacerla obligatoria)"}
+          </Badge>
+        </button>
+      </form>
       <CollaboratorEditor surveyId={survey.id} collaborators={survey.collaborators} />
       <QuestionEditor surveyId={survey.id} questions={survey.questions} />
     </div>

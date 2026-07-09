@@ -11,6 +11,11 @@ export async function toggleSurveyActiveAction(surveyId: string, isActive: boole
   revalidatePath(`/admin/encuestas/${surveyId}`);
 }
 
+export async function toggleCollaboratorRequiredAction(surveyId: string, collaboratorRequired: boolean) {
+  await db.survey.update({ where: { id: surveyId }, data: { collaboratorRequired } });
+  revalidatePath(`/admin/encuestas/${surveyId}`);
+}
+
 async function createImage(file: File): Promise<string> {
   const buffer = Buffer.from(await file.arrayBuffer());
   const image = await db.image.create({ data: { data: buffer, mimeType: file.type } });

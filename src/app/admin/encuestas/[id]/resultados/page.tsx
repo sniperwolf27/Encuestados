@@ -11,10 +11,10 @@ export default async function ResultsPage({
   searchParams,
 }: {
   params: Promise<{ id: string }>;
-  searchParams: Promise<{ from?: string; to?: string }>;
+  searchParams: Promise<{ from?: string; to?: string; search?: string }>;
 }) {
   const { id } = await params;
-  const { from, to } = await searchParams;
+  const { from, to, search } = await searchParams;
 
   const survey = await db.survey.findUnique({
     where: { id },
@@ -29,6 +29,15 @@ export default async function ResultsPage({
         gte: from ? new Date(from) : undefined,
         lte: to ? new Date(`${to}T23:59:59`) : undefined,
       },
+      ...(search
+        ? {
+            OR: [
+              { respondentName: { contains: search, mode: "insensitive" as const } },
+              { respondentPhone: { contains: search, mode: "insensitive" as const } },
+              { collaborator: { name: { contains: search, mode: "insensitive" as const } } },
+            ],
+          }
+        : {}),
     },
     include: { answers: true, collaborator: true },
     orderBy: { createdAt: "desc" },
@@ -65,6 +74,16 @@ export default async function ResultsPage({
       </div>
 
       <form className="mb-6 flex flex-wrap items-end gap-3 rounded-2xl border border-system-separator bg-white p-4">
+        <div>
+          <label className="mb-1 block text-xs text-system-secondary">Buscar</label>
+          <input
+            type="text"
+            name="search"
+            defaultValue={search}
+            placeholder="Nombre, teléfono o colaborador"
+            className="rounded-lg border border-system-separator px-2 py-1 text-sm"
+          />
+        </div>
         <div>
           <label className="mb-1 block text-xs text-system-secondary">Desde</label>
           <input

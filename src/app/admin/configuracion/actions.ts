@@ -40,3 +40,21 @@ export async function changePasswordAction(
 
   return { error: null, success: true };
 }
+
+export type UpdateSettingsState = { error: string | null; success: boolean };
+
+export async function updateSettingsAction(
+  _prevState: UpdateSettingsState,
+  formData: FormData
+): Promise<UpdateSettingsState> {
+  const alertEmail = String(formData.get("alertEmail") ?? "").trim();
+  const googleReviewLink = String(formData.get("googleReviewLink") ?? "").trim();
+
+  await db.setting.upsert({
+    where: { id: "singleton" },
+    create: { id: "singleton", alertEmail: alertEmail || null, googleReviewLink: googleReviewLink || null },
+    update: { alertEmail: alertEmail || null, googleReviewLink: googleReviewLink || null },
+  });
+
+  return { error: null, success: true };
+}

@@ -50,6 +50,18 @@ export async function updateSettingsAction(
   const alertEmail = String(formData.get("alertEmail") ?? "").trim();
   const googleReviewLink = String(formData.get("googleReviewLink") ?? "").trim();
 
+  if (alertEmail && !alertEmail.includes("@")) {
+    return { error: "El correo no parece válido", success: false };
+  }
+
+  if (googleReviewLink) {
+    try {
+      new URL(googleReviewLink);
+    } catch {
+      return { error: "El link de reseña no parece válido", success: false };
+    }
+  }
+
   await db.setting.upsert({
     where: { id: "singleton" },
     create: { id: "singleton", alertEmail: alertEmail || null, googleReviewLink: googleReviewLink || null },

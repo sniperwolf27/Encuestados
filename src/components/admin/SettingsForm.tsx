@@ -41,6 +41,7 @@ export function SettingsForm({
           placeholder="https://g.page/r/..."
           className="mb-4 w-full rounded-xl border border-system-separator px-3 py-2.5"
         />
+        {state.error && <p className="mb-4 text-sm text-red-600">{state.error}</p>}
         {state.success && <p className="mb-4 text-sm text-green-600">Configuración guardada</p>}
         <Button type="submit" disabled={pending}>
           {pending ? "Guardando..." : "Guardar configuración"}

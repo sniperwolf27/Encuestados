@@ -6,20 +6,24 @@ export type CollaboratorOption = { id: string; name: string; imageId: string | n
 
 export function CollaboratorStep({
   collaborators,
+  required,
   onSelect,
 }: {
   collaborators: CollaboratorOption[];
+  required: boolean;
   onSelect: (collaboratorId: string | null) => void;
 }) {
   return (
     <div className="min-h-screen bg-gradient-to-b from-brand-navy to-brand-navy-dark px-4 pt-6 pb-10">
-      <button
-        type="button"
-        onClick={() => onSelect(null)}
-        className="mb-6 flex min-h-11 items-center px-1 text-sm font-semibold text-white/60"
-      >
-        Omitir →
-      </button>
+      {!required && (
+        <button
+          type="button"
+          onClick={() => onSelect(null)}
+          className="mb-6 flex min-h-11 items-center px-1 text-sm font-semibold text-white/60"
+        >
+          Omitir →
+        </button>
+      )}
       <h1 className="mb-6 text-[22px] font-extrabold text-white">¿Quién te atendió?</h1>
       <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
         {collaborators.map((collaborator) => (

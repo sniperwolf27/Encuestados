@@ -65,6 +65,7 @@ export function SurveyForm({
     return (
       <CollaboratorStep
         collaborators={collaborators}
+        required={survey.collaboratorRequired}
         onSelect={(id) => {
           setCollaboratorId(id);
           setCollaboratorStepDone(true);

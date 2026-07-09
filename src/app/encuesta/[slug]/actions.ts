@@ -39,6 +39,10 @@ export async function submitResponseAction(
     return { success: false, errors: { _form: "Colaborador inválido" } };
   }
 
+  if (survey.collaboratorRequired && !collaboratorId) {
+    return { success: false, errors: { _form: "Debes seleccionar quién te atendió" } };
+  }
+
   await db.response.create({
     data: {
       surveyId: survey.id,

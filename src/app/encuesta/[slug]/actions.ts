@@ -79,7 +79,7 @@ export async function submitResponseAction(
     const setting = await db.setting.findUnique({ where: { id: "singleton" } });
 
     if (isLowRating && setting?.alertEmail) {
-      await sendLowRatingAlert({
+      void sendLowRatingAlert({
         to: setting.alertEmail,
         surveyTitle: survey.title,
         respondentName: trimmedName,

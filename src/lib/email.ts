@@ -10,10 +10,12 @@ export async function sendLowRatingAlert(params: {
   const apiKey = process.env.RESEND_API_KEY;
   if (!apiKey) return;
 
+  const fromAddress = process.env.RESEND_FROM_EMAIL ?? "Encuestas David Fotocolor <onboarding@resend.dev>";
+
   const resend = new Resend(apiKey);
   try {
     await resend.emails.send({
-      from: "Encuestas David Fotocolor <onboarding@resend.dev>",
+      from: fromAddress,
       to: params.to,
       subject: `Calificación baja en "${params.surveyTitle}"`,
       text: [

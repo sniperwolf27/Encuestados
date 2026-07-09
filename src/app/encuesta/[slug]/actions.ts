@@ -39,7 +39,7 @@ export async function submitResponseAction(
     return { success: false, errors: { _form: "Colaborador inválido" } };
   }
 
-  if (survey.collaboratorRequired && !collaboratorId) {
+  if (survey.collaboratorRequired && survey.collaborators.length > 0 && !collaboratorId) {
     return { success: false, errors: { _form: "Debes seleccionar quién te atendió" } };
   }
 

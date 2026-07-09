@@ -3,6 +3,7 @@ import Image from "next/image";
 import { db } from "@/lib/db";
 import { ListRow } from "@/components/ui/ListRow";
 import { getSurveyIcon } from "@/lib/survey-icon";
+import { generateQrDataUrl } from "@/lib/qr";
 
 export const dynamic = "force-dynamic";
 
@@ -11,6 +12,9 @@ export default async function HomePage() {
     where: { isActive: true },
     orderBy: { order: "asc" },
   });
+
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL ?? "http://localhost:3000";
+  const qrDataUrl = await generateQrDataUrl(baseUrl);
 
   return (
     <main className="min-h-screen bg-gradient-to-b from-brand-navy to-brand-navy-dark px-5 py-8">
@@ -41,6 +45,18 @@ export default async function HomePage() {
             </Link>
           );
         })}
+      </div>
+
+      <div className="mt-6 flex flex-col items-center gap-2 rounded-2xl bg-white/8 p-5 text-center backdrop-blur-xl">
+        <p className="text-[13px] text-white/55">¿Prefieres tu celular? Escanea aquí</p>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={qrDataUrl}
+          alt="Código QR para abrir esta página en tu celular"
+          width={120}
+          height={120}
+          className="rounded-lg"
+        />
       </div>
     </main>
   );

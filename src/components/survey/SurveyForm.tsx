@@ -98,17 +98,23 @@ export function SurveyForm({
         ))}
 
         <div className="mb-3.5 rounded-2xl bg-white/8 p-[18px] backdrop-blur-xl">
-          <p className="mb-2 text-[15px] font-semibold text-white">Nombre (opcional)</p>
+          <p className="mb-2 text-[15px] font-semibold text-white">
+            Nombre {survey.nameRequired ? <span className="text-brand-orange">*</span> : "(opcional)"}
+          </p>
           <input
+            required={survey.nameRequired}
             value={respondentName}
             onChange={(e) => setRespondentName(e.target.value)}
             className="mb-4 w-full rounded-xl border border-white/15 bg-white/5 px-3 py-2.5 text-white placeholder:text-white/30"
           />
-          <p className="mb-2 text-[15px] font-semibold text-white">Teléfono (opcional)</p>
+          <p className="mb-2 text-[15px] font-semibold text-white">
+            Teléfono {survey.phoneRequired ? <span className="text-brand-orange">*</span> : "(opcional)"}
+          </p>
           <input
             type="tel"
             inputMode="numeric"
             autoComplete="off"
+            required={survey.phoneRequired}
             value={respondentPhone}
             onChange={(e) => setRespondentPhone(e.target.value)}
             className="w-full rounded-xl border border-white/15 bg-white/5 px-3 py-2.5 text-white placeholder:text-white/30"

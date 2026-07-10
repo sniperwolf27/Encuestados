@@ -18,6 +18,16 @@ export async function toggleCollaboratorRequiredAction(surveyId: string, collabo
   revalidatePath(`/admin/encuestas/${surveyId}`);
 }
 
+export async function toggleNameRequiredAction(surveyId: string, nameRequired: boolean) {
+  await db.survey.update({ where: { id: surveyId }, data: { nameRequired } });
+  revalidatePath(`/admin/encuestas/${surveyId}`);
+}
+
+export async function togglePhoneRequiredAction(surveyId: string, phoneRequired: boolean) {
+  await db.survey.update({ where: { id: surveyId }, data: { phoneRequired } });
+  revalidatePath(`/admin/encuestas/${surveyId}`);
+}
+
 async function createImage(file: File): Promise<string> {
   const buffer = Buffer.from(await file.arrayBuffer());
   const image = await db.image.create({ data: { data: buffer, mimeType: file.type } });

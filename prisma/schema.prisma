@@ -38,6 +38,8 @@ model Survey {
   emoji                String?
   isActive             Boolean    @default(true)
   collaboratorRequired Boolean    @default(false)
+  nameRequired         Boolean    @default(false)
+  phoneRequired        Boolean    @default(false)
   order                Int        @default(0)
   factorySnapshot      Json?
   questions            Question[]

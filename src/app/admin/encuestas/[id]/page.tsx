@@ -8,7 +8,13 @@ import { SurveyInfoEditor } from "@/components/admin/SurveyInfoEditor";
 import { ResetSurveyButton } from "@/components/admin/ResetSurveyButton";
 import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
-import { toggleSurveyActiveAction, toggleCollaboratorRequiredAction, duplicateSurveyAction } from "./actions";
+import {
+  toggleSurveyActiveAction,
+  toggleCollaboratorRequiredAction,
+  toggleNameRequiredAction,
+  togglePhoneRequiredAction,
+  duplicateSurveyAction,
+} from "./actions";
 
 export default async function SurveyEditorPage({
   params,
@@ -78,21 +84,46 @@ export default async function SurveyEditorPage({
         </div>
       </div>
 
-      <form
-        action={async () => {
-          "use server";
-          await toggleCollaboratorRequiredAction(survey.id, !survey.collaboratorRequired);
-        }}
-        className="mb-3"
-      >
-        <button type="submit">
-          <Badge tone={survey.collaboratorRequired ? "success" : "neutral"}>
-            {survey.collaboratorRequired
-              ? "Selección de colaborador obligatoria (click para hacerla opcional)"
-              : "Selección de colaborador opcional (click para hacerla obligatoria)"}
-          </Badge>
-        </button>
-      </form>
+      <div className="mb-3 flex flex-wrap gap-2">
+        <form
+          action={async () => {
+            "use server";
+            await toggleCollaboratorRequiredAction(survey.id, !survey.collaboratorRequired);
+          }}
+        >
+          <button type="submit">
+            <Badge tone={survey.collaboratorRequired ? "success" : "neutral"}>
+              {survey.collaboratorRequired
+                ? "Colaborador obligatorio"
+                : "Colaborador opcional"}
+            </Badge>
+          </button>
+        </form>
+        <form
+          action={async () => {
+            "use server";
+            await toggleNameRequiredAction(survey.id, !survey.nameRequired);
+          }}
+        >
+          <button type="submit">
+            <Badge tone={survey.nameRequired ? "success" : "neutral"}>
+              {survey.nameRequired ? "Nombre obligatorio" : "Nombre opcional"}
+            </Badge>
+          </button>
+        </form>
+        <form
+          action={async () => {
+            "use server";
+            await togglePhoneRequiredAction(survey.id, !survey.phoneRequired);
+          }}
+        >
+          <button type="submit">
+            <Badge tone={survey.phoneRequired ? "success" : "neutral"}>
+              {survey.phoneRequired ? "Teléfono obligatorio" : "Teléfono opcional"}
+            </Badge>
+          </button>
+        </form>
+      </div>
       <CollaboratorEditor surveyId={survey.id} collaborators={survey.collaborators} />
       <QuestionEditor surveyId={survey.id} questions={survey.questions} />
     </div>

@@ -52,6 +52,14 @@ export async function submitResponseAction(
   const trimmedName = respondentName.trim() || null;
   const trimmedPhone = respondentPhone.trim() || null;
 
+  if (survey.nameRequired && !trimmedName) {
+    return { success: false, errors: { _form: "El nombre es obligatorio" } };
+  }
+
+  if (survey.phoneRequired && !trimmedPhone) {
+    return { success: false, errors: { _form: "El teléfono es obligatorio" } };
+  }
+
   const response = await db.response.create({
     data: {
       surveyId: survey.id,

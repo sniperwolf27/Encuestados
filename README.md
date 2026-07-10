@@ -19,7 +19,7 @@ Sitio de encuestas de satisfacción para David Fotocolor (Fotografía, Edición,
    - `ADMIN_USERNAME` — usuario inicial del admin
    - `ADMIN_PASSWORD` — contraseña inicial del admin (cámbiala después desde `/admin/configuracion`)
    - `SESSION_SECRET` — cadena aleatoria larga (por ejemplo, generada con `openssl rand -base64 32`)
-   - `NEXT_PUBLIC_BASE_URL` — la URL pública que Railway asigna al servicio (ej. `https://encuestas-davidfotocolor.up.railway.app`)
+   - `BASE_URL` — la URL pública que Railway asigna al servicio (ej. `https://encuestas-davidfotocolor.up.railway.app`)
 4. Railway detecta Next.js automáticamente y usa `npm run build` / `npm run start`. El comando `start` corre `prisma migrate deploy` antes de levantar el servidor, así que las migraciones se aplican en cada deploy.
 5. Después del primer deploy, corre el seed una vez desde la consola de Railway (Shell del servicio): `npx prisma db seed`. Esto crea el admin inicial y las 3 encuestas base.
 6. Verifica: abre la URL pública, confirma que aparecen las 3 encuestas, y entra a `/admin/login` con las credenciales configuradas.

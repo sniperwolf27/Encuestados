@@ -53,9 +53,9 @@ export default async function HomePage() {
         <img
           src={qrDataUrl}
           alt="Código QR para abrir esta página en tu celular"
-          width={120}
-          height={120}
-          className="rounded-lg"
+          width={320}
+          height={320}
+          className="h-[clamp(120px,28vw,320px)] w-[clamp(120px,28vw,320px)] rounded-lg"
         />
       </div>
     </main>

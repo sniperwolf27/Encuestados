@@ -300,6 +300,8 @@ export async function duplicateSurveyAction(surveyId: string) {
       order: (maxOrder._max.order ?? -1) + 1,
       isActive: false,
       collaboratorRequired: survey.collaboratorRequired,
+      nameRequired: survey.nameRequired,
+      phoneRequired: survey.phoneRequired,
       factorySnapshot: {
         title: newTitle,
         description: survey.description,
